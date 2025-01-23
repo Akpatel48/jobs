@@ -88,8 +88,8 @@ function SingleJobView() {
             </Helmet> */}
             <Helmet>
                 <title>{`${company} - ${data?.data.title}`}</title>
-                <meta name="description" content="Job Description" />
-                <meta name="keywords" content="job, career, employment" />
+                <meta property="og:description" content="Job Description" />
+                <meta property="og:keywords" content="job, career, employment" />
             </Helmet>
             <ToastContainer />
             <Box sx={{ backgroundColor: "#ffffff", minHeight: "100vh", mt: 0, p: 0 }}>
