@@ -19,6 +19,9 @@ import {
     MenuItem,
     DialogContent,
     Box,
+    IconButton,
+    useTheme,
+    useMediaQuery,
 } from '@mui/material';
 import Stepper from '@mui/material/Stepper';
 import Snackbar from '@mui/material/Snackbar';
@@ -38,24 +41,28 @@ import dayjs from 'dayjs';
 import { clearJobData } from '../../redux/job/JobReducer';
 import { auth, getUserFromDatabase } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import edjobster09 from "../../assets/images/edjobster-09.png"
+import BackgroundImageURL from "../../assets/images/BackgroundImageURL.jpeg"
 
 
 // const steps = ['FillDetails', 'Fill Webform', 'Complete Assesment', 'Preview'];
-
+// const steps = ['FillDetails', 'Complete Assesment', 'Preview'];
 
 function JobApplication() {
-    // const [userAssesment,SetUserassesment] = useState();
-    
+
     const steps = (localStorage?.getItem("assesment") !== "null" ) ?
         ['FillDetails', 'Complete Assesment', 'Preview'] : 
         ['FillDetails', 'Preview'];
 
-    const [userResume,SetUserResume] = useState();
 
+    const [userResume,SetUserResume] = useState();
+    const [resume, setResume] = useState(null);
+
+    
     const getStepContent = (step) => {
         switch (step) {
             case 0:
-                return userResume ? <FillDetails userresume={userResume}/> : <FillDetails/>;
+                return userResume ? <FillDetails userresume={userResume}/> :<FillDetails  resume={resume} setResume={setResume} userresume={userResume}/>;
             // case 1:
             //     return <FillWebForm />;
             case 1:
@@ -68,22 +75,24 @@ function JobApplication() {
                 return 'Unknown step';
         }
     }
-    const navigate = useNavigate()
+
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
-    const { id } = useParams()
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+    // resume shaper
     const searchParams = new URLSearchParams(location.search);
     const jobtitle = searchParams.get('jobtitle');
     const jobid = searchParams.get('jobid');
     const user = searchParams.get('user');
     const userassesment =searchParams.get('assesment')
-    // SetUserassesment(userassesment)
-    if (jobid){
-
+    if (jobid) {
         localStorage.setItem("assesment",userassesment)
     }
-    
+
+    const [gettingUser,SetGettingUser] = useState(false);
     
     const jobName = location.state?.job_name || jobtitle;
     const [activeStep, setActiveStep] = React.useState(0);
@@ -91,16 +100,12 @@ function JobApplication() {
     const webform = useSelector((state) => state.job.job)    
     const assesment = useSelector((state) => state?.assesment?.assesment)
     const candidate_id = localStorage.getItem("candidate_id")
-    // console.log("assesment................."assesment);
-
-    //firebase
-    const [gettingUser,SetGettingUser] = useState(false);
-
+    const { id } = useParams()
+    
+    
     const { data, isLoading, refetch } = useGetJobeDetailsQuery(id);
     
     const job_id =jobid ? jobid : localStorage.getItem("jobId")
-
-    
 
     const [candidate, AddCandidate] = useCandidateApplyMutation()
     const [createCandidate, CreateCandidateInfo] = useAddCandidateMutation()
@@ -111,6 +116,22 @@ function JobApplication() {
         return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
     });
     const [open, setOpen] = React.useState(false);
+
+    useEffect(() => {
+        if (jobid) {
+        const listen = onAuthStateChanged(auth, async () => {
+          if (user) {
+            SetGettingUser(true);
+            const userFirebase = await getUserFromDatabase(user);
+            SetUserResume(userFirebase.resumes)
+            // dispatch(updateUser(userFirebase));
+            // initializeSavedResumes(userFirebase);
+          } else {
+            navigate("/");
+          }
+        });
+    }
+      }, []);
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -245,7 +266,6 @@ function JobApplication() {
             'Functional Area': webform?.["Functional Area"],
             'Notice Period': webform?.["Notice Period"],
             'Job Role': webform?.["Job Role"],
-
         };
 
         const extraFields = {};
@@ -257,7 +277,6 @@ function JobApplication() {
         // Combine specific fields and extra fields into the request payload
         const requestData = {
             job: job_id,
-            // resume_user: user,
             // first_name: specificFields['First Name'],
             // middle_name: specificFields['Middle Name'],
             // last_name: specificFields['Last Name'],
@@ -320,12 +339,12 @@ function JobApplication() {
         // formData.append('subjects', JSON.stringify(formData.subjects));
         formData.append('notice_period', webform.notice_period);
         // formData.append('skills', webform.skills);
-        formData.append('pipeline_stage_status', "Associated_Screening");
+        formData.append('pipeline_stage_status', "Associated");
         formData.append('pipeline_stage', "Associated_Screening");
         formData.append('summary', webform.summary);
-        formData.append("resume_id",webform.resume_id)
+        formData.append("resume_data", webform.resume_data ? webform.resume_data : JSON.stringify({}));
         formData.append("resume_user",user)
-        formData.append("resume_data",webform.resume_data)
+
         // Append files
         if (webform?.cover_letter instanceof File) {
           formData.append('cover_letter', webform.cover_letter);
@@ -337,9 +356,9 @@ function JobApplication() {
           formData.append('professional_certificate', webform.professional_certificate);
         }
         
-        if (webform?.resume instanceof File) {
-            formData.append('resume', webform.resume);
-          }
+        if (resume) {
+            formData.append('resume', resume);
+        }
         formData.append('user_experiences', JSON.stringify(webform.user_experiences));
         formData.append('user_educations', JSON.stringify(webform.user_educations));
         formData.append('addional_fields', JSON.stringify(requestData.addional_fields));
@@ -366,26 +385,6 @@ function JobApplication() {
         dispatch(clearJobData());
     };
 
-    //firebase
-
-    
-    useEffect(() => {
-        if (jobid) {
-        const listen = onAuthStateChanged(auth, async () => {
-          if (user) {
-            SetGettingUser(true);
-            const userFirebase = await getUserFromDatabase(user);
-            SetUserResume(userFirebase.resumes)
-            // dispatch(updateUser(userFirebase));
-            // initializeSavedResumes(userFirebase);
-          } else {
-            navigate("/");
-          }
-        });
-    }
-      }, []);
-    
-
 
     useEffect(() => {
         if (AddCandidate?.isSuccess) {
@@ -399,10 +398,10 @@ function JobApplication() {
         //   showToast('error', 'Error adding candidate, please fill all the details');
         }
         if (CreateCandidateInfo.isSuccess) {
-          toast.success('Successfully added candidate');
-          
+          toast.success('Successfully added candidates');
+        //   showToast('success', 'Successfully added candidate');
         const timeoutId = setTimeout(() => {
-            navigate('/');
+            navigate(-1);
           }, 2000);
           return () => clearTimeout(timeoutId);
         
@@ -425,20 +424,63 @@ function JobApplication() {
 
     return (
         <div >
-            <Stack sx={{
+            {/* <Stack sx={{
                 display: "flex",
-                flexDirection: "row",
+                flexDirection: { xs: "column", sm: "row" },
                 // justifyContent: "center", // Center the content
                 alignItems: "center", // Center vertically
+                justifyContent: "center", // Center the content
+                padding: { xs: 2, sm: 0 },
             }}>
                 <ArrowBackIcon color="secondary"
                 onClick={handleBackPage}
-                sx={{ cursor: "pointer", marginRight: 2 }} />
-                <Typography variant="h5" component="h1" sx={{ flexGrow: 1, textAlign: "center", paddingBottom: "4px" }}>
+                sx={{ cursor: "pointer", marginLeft: 2, height: "35px", width: "35px" }} />
+                <Typography variant="h5" component="h1" sx={{ flexGrow: 1, textAlign: "center", paddingBottom: "0px", textDecoration: 'underline' }}>
                     {jobName}
                 </Typography>
-            </Stack>
-            <Card>
+            </Stack> */}
+            <IconButton 
+                onClick={handleBackPage}
+                sx={{ 
+                    position: 'absolute', 
+                    top: 16, // Adjusted for better visibility
+                    left: 16, // Adjusted for better visibility
+                    zIndex: 3, // Ensure it appears above other elements
+                    color: '#fff', // Ensure the icon is visible against the background
+                }}
+            >
+                <ArrowBackIcon fontSize="large" />
+            </IconButton>
+                <Box
+                    sx={{
+                        backgroundImage: `url(${BackgroundImageURL})`, // Use dynamic image
+                        backgroundSize: '110%', // Zoom effect
+                        backgroundPosition: 'center',
+                        color: '#fff',
+                        textAlign: 'center',
+                        py: 5,
+                        position: 'relative',
+                        '&::before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                            zIndex: 1,
+                        },
+                        '& > *': {
+                            position: 'relative',
+                            zIndex: 2,
+                        }
+                    }}
+                >
+                    <Typography variant="h3">
+                        {jobName}
+                    </Typography>
+                </Box>
+            <Card style={{ marginTop: "2%", marginBottom: "2%" }}>
                 <div style={{ width: "60%", marginLeft: "auto", marginRight: "auto", marginTop: "2%" }}>
                     <Stepper activeStep={activeStep} sx={{ fontSize: "xx-large" }}>
                         {steps.map((label, index) => {
@@ -468,26 +510,25 @@ function JobApplication() {
                             <div>
                                 {getStepContent(activeStep)}
                             </div>
-                            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2, marginBottom: '10px', marginLeft: '5px' }}>
-                                <div style={{ display: "flex", alignItems: "center" }}>
-                                    <Button disabled={activeStep === 0} onClick={handleBack} style={{ marginRight: '5px' }}>
+                            <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: '5%', marginBottom: '20px', justifyContent: 'space-evenly' }}>
+                                <div style={{ display: "flex", alignItems: "center"}}>
+                                    <Button disabled={activeStep === 0} onClick={handleBack} style={{ marginRight: '30px' }}>
                                         Back
                                     </Button>
                                 </div>
-                                <Box sx={{ flex: '1 1 auto' }} />
+                                {/* <Box sx={{ flex: '1 1 auto' }} /> */}
                                 <div style={{ display: "flex", alignItems: "center" }}>
                                     {/* <Button variant="contained" color="primary" onClick={handleNext} style={{ marginRight: '5px' }}>
                                         {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                                     </Button> */}
                                     {activeStep === steps.length - 1 ? (
                                         <>
-                                        <Button variant="contained" color="primary" onClick={handleComplete} style={{ marginRight: '5px' }}>
+                                        <Button variant="contained" color="primary" onClick={handleComplete} style={{ marginRight: '0px' }}>
                                             Finish
                                         </Button>
-                                       
                                         </>
                                     ) : (
-                                        <Button variant="contained" color="primary" onClick={handleNext} style={{ marginRight: '5px' }}>
+                                        <Button variant="contained" color="primary" onClick={handleNext} style={{ marginRight: '0px' }}>
                                             Next
                                         </Button>
                                     )}
@@ -507,6 +548,20 @@ function JobApplication() {
                     )}
                 </div>
             </Card>
+            <Box
+                pt={3}
+                mb={3}
+                // borderTop="1px solid #e0e0e0"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                flexDirection={isMobile ? "column" : "row"}
+                >
+                <Typography variant="body2" color="textSecondary" align="center">
+                Powered by 
+                </Typography>
+                <img src={edjobster09} alt="Powered by Edjobster" style={{ marginLeft: "8px", height: "35px" }} />
+                </Box>
             <ToastContainer/>
         </div>
     )

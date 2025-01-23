@@ -10,7 +10,6 @@ import FilterSidebar from './FilterSidebar';
 import TopJobSearch from '../../components/TopJobSearch';
 import BackgroundImageURL from "../../assets/images/BackgroundImageURL.jpeg"
 
-
 function JobsPage() {
     // const [jobs, setJobs] = useState([]);
     const navigate = useNavigate();
@@ -19,8 +18,7 @@ function JobsPage() {
     const { searchTerm, location: searchLocation, experience } = location.state || {};
     const [jobType, setJobType] = useState('');
     const [salaryRange, setSalaryRange] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const jobsPerPage = 10;
+    const [isViewJobsClicked, setIsViewJobsClicked] = useState(true);
 
     const { data: jobs = [], refetch , error, isLoading } = useGetFilterJobsQuery({
         title: searchTerm,
@@ -50,17 +48,6 @@ function JobsPage() {
             const topPosition = applyNowRef.current.getBoundingClientRect().top + window.pageYOffset - offset;
             window.scrollTo({ top: topPosition, behavior: 'smooth' });
         }
-    };
-
-    // Calculate if there are more jobs to show
-    const hasMoreJobs = jobs.length > currentPage * jobsPerPage;
-
-    // Get current jobs for display
-    const currentJobs = jobs.slice(0, currentPage * jobsPerPage);
-
-    // Handle load more click
-    const handleLoadMore = () => {
-        setCurrentPage(prev => prev + 1);
     };
 
     return (
@@ -123,13 +110,13 @@ function JobsPage() {
                         View Openings
                     </Button>
                 </Box>
-            </Box> 
+            </Box>
             {/* <TopJobSearch />          */}
-            <Grid container spacing={0} sx={{ mt: 11 , p: 0}} >
+            <Grid container spacing={0} sx={{ mt: 3 }}>
                 {/* <Grid item xs={12} md={3}>
                     <FilterSidebar onFilterChange={handleFilterChange} />
                 </Grid> */}
-                <Grid item xs={12} md={12} >
+                <Grid item xs={12} md={12}>
                     <Box ref={applyNowRef} sx={{ p: 4, textAlign: 'center' }}>
                         <Typography variant="h4" sx={{ mb: 2 }}>
                             Apply Now
@@ -138,8 +125,8 @@ function JobsPage() {
                             Current Openings
                         </Typography>
                         <Grid container spacing={2} direction="column" justifyContent="center" alignItems="center" sx={{ px: 2 }}>
-                            {currentJobs.length > 0 ? (
-                                currentJobs.map((job, index) => (
+                            {jobs.length > 0 ? (
+                                jobs.map((job, index) => (
                                     <Grid item xs={12} sm={12} md={10} key={job.id}>
                                         <Card
                                             variant="outlined"
@@ -156,11 +143,11 @@ function JobsPage() {
                                                     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
                                                 },
                                             }}
-                                            onClick={() => navigate(`/jobs/Careers/${job?.id}/${encodeURIComponent(job?.title)}`, { state: { logo: job.company_logo, company: job.company_name , companyId: job.company_id } })}
+                                            onClick={() => navigate(`/jobs/Careers/${job?.id}/${encodeURIComponent(job?.title)}`, { state: { logo: job.company_logo, company: job.company_name , companyId: job.company_id, isViewJobsClicked } })}
                                         >
                                             <Box
                                                 component="img"
-                                                src={`${baseUrl}${job?.company_logo?.slice(1)}`}
+                                                src={`${baseUrl}${job.company_logo.slice(1)}`}
                                                 alt={`${job.company_name} logo`}
                                                 sx={{
                                                     position: 'absolute',
@@ -213,16 +200,9 @@ function JobsPage() {
                                 </Grid>
                             )}
                         </Grid>
-                        {/* Only show the "10 MORE" button if there are more jobs */}
-                        {hasMoreJobs && (
-                            <Button 
-                                variant="outlined" 
-                                sx={{ mt: 4, borderRadius: '20px' }}
-                                onClick={handleLoadMore}
-                            >
-                                10 MORE
-                            </Button>
-                        )}
+                        <Button variant="outlined" sx={{ mt: 4, borderRadius: '20px' }}>
+                            10 MORE
+                        </Button>
                     </Box>
                 </Grid>
             </Grid>

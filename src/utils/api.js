@@ -50,9 +50,8 @@ const   apiUrl = {
   CareerSiteCompanyData: `${baseUrl}account/careersite-company-details/`,
   skill:`${baseUrl}candidate/skill/`,         
   subject:`${baseUrl}candidate/subject-specialization/`,
-  degreeCareer:`${baseUrl}settings/DesignationCareer/`,  
-  designationCareer:`${baseUrl}settings/DegreeCareer/`, 
-  BackgroundImage: `${baseUrl}account/careersite-company-details/` 
+  designationCareer:`${baseUrl}settings/DesignationCareer/`,  
+  degreeCareer:`${baseUrl}settings/DegreeCareer/`,  
 
 };
 

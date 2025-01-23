@@ -9,9 +9,9 @@ const extendedApi = apiBasePath.injectEndpoints({
     getJobList: build.query({
       query: () => ({
         url: `${apiUrl.jobs}all-jobs`,
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
+        // headers: {
+        //   'Authorization': `Bearer ${accessToken}`
+        // }
       }),
     }),
     getJobDetails: build.query({

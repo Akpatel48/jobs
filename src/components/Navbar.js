@@ -1,87 +1,3 @@
-// // NavbarMui.js
-
-// import React from 'react';
-// import { AppBar, Toolbar, Typography, Button, TextField, IconButton, Box } from '@mui/material';
-// import SearchIcon from '@mui/icons-material/Search';
-// import { makeStyles } from '@mui/styles';
-// import { Link, NavLink } from 'react-router-dom'; // If you're using React Router
-// import FacebookIcon from '@mui/icons-material/Facebook';
-// import CloseIcon from '@mui/icons-material/Close';
-// import LinkedInIcon from '@mui/icons-material/LinkedIn';
-// import edjobster09 from "../assets/images/edjobster-09.png"
-
-// const useStyles = makeStyles((theme) => ({
-//     root: {
-//         flexGrow: 1,
-//     },
-//     title: {
-//         flexGrow: 1,
-//     },
-//     link: {
-//         textDecoration: 'none',
-//         color: 'white',
-//     },
-// }));
-
-// const Navbar = () => {
-//     const classes = useStyles();
-
-//     return (
-//         // <div className={classes.root}>
-//         <AppBar position="static" sx={{ background: '#f4f6f8', boxShadow: 'none' }}>
-//         <Toolbar sx={{ justifyContent: 'space-between' }}>
-//             <Typography variant="h6">
-//                 <img
-//                     style={{ width: "13%", margin: "0" }}
-//                     src={edjobster09}
-//                     alt="logo"
-//                 />
-//             </Typography>
-
-//             <Box
-//                 sx={{
-//                     display: 'flex',
-//                     alignItems: 'center',
-//                     gap: '32px',
-//                     flexWrap: 'nowrap',
-//                     '& a': {
-//                         textDecoration: 'none',
-//                         color: 'black',
-//                         '&.active': {
-//                             fontWeight: 'bold',
-//                             color: '#89ba16',
-//                         },
-//                     },
-//                 }}
-//             >
-//                 <NavLink to="/home" activeClassName="active">Home</NavLink>
-//                 <NavLink to="/jobs" activeClassName="active">Jobs</NavLink>
-//                 {/* <NavLink to="/post-job" activeClassName="active">Post Job</NavLink> */}
-//                 {/* <NavLink to="/upload-resume" activeClassName="active">Upload Resume</NavLink> */}
-//                 {/* <NavLink to="/for-employer" activeClassName="active">For Employer</NavLink> */}
-//             </Box>
-
-//             <Box sx={{ display: 'flex', gap: '16px', ml: '16px' }}>
-//                 <IconButton color="inherit">
-//                     <FacebookIcon />
-//                 </IconButton>
-//                 <IconButton color="inherit">
-//                     <CloseIcon />
-//                 </IconButton>
-//                 <IconButton color="inherit">
-//                     <LinkedInIcon />
-//                 </IconButton>
-//             </Box>
-//         </Toolbar>
-//     </AppBar>
-//         // </div>
-//     );
-// };
-
-// export default Navbar;
-
-
-// Import necessary modules and components
 import React, { useState } from "react";
 import {
   AppBar,
@@ -107,66 +23,64 @@ import {
 } from "@mui/material";
 import { styled, useTheme } from "@mui/system";
 import {
-  Search as SearchIcon,
-  Notifications as NotificationsIcon,
-  Menu as MenuIcon,
-  AccountCircle as AccountCircleIcon,
-  Settings as SettingsIcon,
-  ExitToApp as ExitToAppIcon
-} from "@mui/icons-material";
+    Search as SearchIcon,
+    Notifications as NotificationsIcon,
+    Menu as MenuIcon,
+    AccountCircle as AccountCircleIcon,
+    Settings as SettingsIcon,
+    ExitToApp as ExitToAppIcon
+  } from "@mui/icons-material";
 import edjobster09 from "../assets/images/edjobster-09.png"
-import { Link, NavLink, useLocation } from "react-router-dom";
-import Searchtest from "./Searchtest";
-
+import { Link, NavLink } from "react-router-dom";
 
 
 // Define styled components
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
-  display: "flex",
-  justifyContent: "space-between",
-  padding: "10px 0",
-  backgroundColor: "#ffffff"
-}));
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "10px 0",
+    backgroundColor: "#ffffff"
+  }));
 
 const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: "25px",
-  backgroundColor: "rgba(0, 0, 0, 0.05)",
-  "&:hover": {
-    backgroundColor: "rgba(0, 0, 0, 0.1)"
-  },
-  marginRight: "16px",
-  marginLeft: "0",
-  width: "100%",
-  maxWidth: "400px"
+    position: "relative",
+    borderRadius: "25px",
+    backgroundColor: "rgba(0, 0, 0, 0.05)",
+    "&:hover": {
+      backgroundColor: "rgba(0, 0, 0, 0.1)"
+    },
+    marginRight: "16px",
+    marginLeft: "0",
+    width: "100%",
+    maxWidth: "400px"
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: "0 16px",
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  color: "#000000"
+    padding: "0 16px",
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#000000"
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "#000000",
-  width: "100%",
-  "& .MuiInputBase-input": {
-    padding: "8px 8px 8px 48px",
-    width: "100%"
-  }
+    color: "#000000",
+    width: "100%",
+    "& .MuiInputBase-input": {
+      padding: "8px 8px 8px 48px",
+      width: "100%"
+    }
 }));
 
 const NavButton = styled(Button)(({ theme }) => ({
-  color: "#000000",
-  margin: "0 8px",
-  "&:hover": {
-    backgroundColor: "rgba(0, 0, 0, 0.1)"
-  }
+    color: "#000000",
+    margin: "0 8px",
+    "&:hover": {
+      backgroundColor: "rgba(0, 0, 0, 0.1)"
+    }
 }));
 
 // Define the Header component
@@ -176,11 +90,6 @@ const Navbar = () => {
   const [error, setError] = useState(null);
   const theme = useTheme();
   const isMobile = useMediaQuery("(max-width:960px)");
-  const location = useLocation();
-  const isJobsPage = location.pathname === "/jobs";
-  const [showTopJobSearch, setShowTopJobSearch] = useState(false);
-  const [isSearchButtonVisible, setIsSearchButtonVisible] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -205,24 +114,14 @@ const Navbar = () => {
     }
   };
 
-  const handleSearchButtonClick = () => {
-    setShowTopJobSearch(true);
-    setIsSearchButtonVisible(false);
-  };
-
-  const handleSearchComplete = () => {
-    setShowTopJobSearch(false);
-    setIsSearchButtonVisible(true);
-  };
-
-  const handleSearchChange = (newValue) => {
-    setSearchTerm(newValue);
-  };
+  const handleRedirect = () => {
+    window.location.href = "https://staging-cv-app.edjobster.com/"; // Redirect function
+};
 
   const menuItems = [
     { text: "Home", id: "home", to: "/" },
     { text: "Jobs", id: "jobs", to: "/jobs" },
-    { text: "Registration", id: "registrationform", to: "/registrationform" },
+    { text: "Registration", id: "registrationform", to: " ", onClick: handleRedirect  },
     { text: "About Us", id: "about" }
   ];
 
@@ -259,17 +158,42 @@ const Navbar = () => {
 
   const navigationContent = (
     <>
-      {menuItems.map((item) => (
-        <NavButton
-          key={item.id}
-          aria-label={item.text}
+      <NavButton
+          key="home"
+          aria-label="Home"
           role="menuitem"
-          component={NavLink} // Use NavLink for routing
-          to={item.to || "#"} // Use 'to' property if available
-        >
-          {item.text}
-        </NavButton>
-      ))}
+          component={NavLink}
+          to="/"
+      >
+            Home
+      </NavButton>
+      <NavButton
+          key="jobs"
+          aria-label="Jobs"
+          role="menuitem"
+          component={NavLink}
+          to="/jobs"
+      >
+          Jobs
+      </NavButton>
+      <NavButton
+          key="registrationform"
+          aria-label="Registration"
+          role="menuitem"
+          onClick={() => window.location.href = "https://staging-cv-app.edjobster.com/"} // Redirect on click
+          component="div" // Use 'div' to prevent NavLink behavior
+      >
+          Registration
+      </NavButton>
+      <NavButton
+          key="about"
+          aria-label="About Us"
+          role="menuitem"
+          component={NavLink}
+          to="#"
+      >
+          About Us
+      </NavButton>
     </>
   );
 
@@ -313,22 +237,18 @@ const Navbar = () => {
             )}
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              {isJobsPage && isSearchButtonVisible && (
-                <Button onClick={handleSearchButtonClick}>
-                  <Search>
-                    <SearchIconWrapper>
-                      <SearchIcon />
-                    </SearchIconWrapper>
-                    <StyledInputBase
-                      placeholder="Search jobs..."
-                      readOnly
-                    />
-                  </Search>
-                  {/* <img src={require("../assets/images/Screenshot 2024-12-25 131909.png")} alt="Search" /> */}
-                </Button>
-              )}
+              {/* <Search>
+                <SearchIconWrapper>
+                  <FaSearch />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  placeholder="Search jobs..."
+                  inputProps={{ "aria-label": "search" }}
+                  onKeyPress={handleSearch}
+                />
+              </Search> */}
 
-              <Tooltip title="Notifications">
+              {/* <Tooltip title="Notifications">
                 <IconButton
                   size="large"
                   aria-label="show 3 new notifications"
@@ -338,7 +258,7 @@ const Navbar = () => {
                     <NotificationsIcon />
                   </Badge>
                 </IconButton>
-              </Tooltip>
+              </Tooltip> */}
 
               {/* <Tooltip title="Account settings">
                 <IconButton
@@ -357,11 +277,11 @@ const Navbar = () => {
 
               {isMobile && (
                 <IconButton
-                  sx={{ color: "#000000", ml: 1 }}
-                  color="inherit"
-                  aria-label="open drawer"
-                  edge="start"
-                  onClick={handleMobileMenuToggle}
+                    sx={{ color: "#000000", ml: 1 }}
+                    color="inherit"
+                    aria-label="open drawer"
+                    edge="start"
+                    onClick={handleMobileMenuToggle}
                 >
                   <MenuIcon />
                 </IconButton>
@@ -370,13 +290,7 @@ const Navbar = () => {
           </StyledToolbar>
         </Container>
       </AppBar>
-      {showTopJobSearch && (
-        <Searchtest 
-          searchTerm={searchTerm}
-          onSearchChange={handleSearchChange}
-          onSearchComplete={handleSearchComplete} 
-        />
-      )}
+
       <Drawer
         anchor="right"
         open={mobileMenuOpen}
@@ -388,11 +302,22 @@ const Navbar = () => {
           onClick={handleMobileMenuToggle}
         >
           <List>
-            {menuItems.map((item) => (
-              <ListItem button key={item.id}>
-                <ListItemText primary={item.text} />
-              </ListItem>
-            ))}
+            <ListItem button key="home" component={NavLink} to="/">
+              <ListItemText primary="Home" />
+            </ListItem>
+            <ListItem button key="jobs" component={NavLink} to="/jobs">
+              <ListItemText primary="Jobs" />
+            </ListItem>
+            <ListItem
+              button
+              key="registrationform"
+              onClick={() => window.location.href = "https://staging-cv-app.edjobster.com/"} // Redirect on click
+            >
+              <ListItemText primary="Registration" sx={{ color: '#000000' }} />
+            </ListItem>
+            <ListItem button key="about" component={NavLink} to="#">
+              <ListItemText primary="About Us" />
+            </ListItem>
           </List>
         </Box>
       </Drawer>
@@ -413,7 +338,6 @@ const Navbar = () => {
         </Alert>
       </Snackbar>
     </Box>
-
   );
 };
 

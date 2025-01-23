@@ -156,7 +156,7 @@ const DynamicFooter = ({companyInfo}) => {
           flexDirection={isMobile ? "column" : "row"}
         >
           <Typography variant="body2" color="textSecondary" align="center">
-            © {currentYear} {companyInfo.name}. All Rights Reserved.
+            Powered by Edjobster
           </Typography>
         </Box>
 

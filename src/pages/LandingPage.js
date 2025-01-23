@@ -24,7 +24,7 @@ export default function LandingPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await apiGET('account/get-all-company/');
+                const response = await apiGET('account/get-all-companycarrer/');
                 // console.log("companies data", response.data.companies)
                 setProducts(response.data.companies);
             } catch (error) {
@@ -128,6 +128,7 @@ export default function LandingPage() {
                             height: 120,
                             position: 'relative',
                             transition: 'transform 0.3s, box-shadow 0.3s', 
+                            cursor: 'pointer',
 
                             '&:hover': {
                                 // transform: 'scale(1.05)',

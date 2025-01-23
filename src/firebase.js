@@ -9,15 +9,30 @@ import { getAnalytics } from "firebase/analytics";
 
 import { getAuth } from "firebase/auth";
 import {
+  Timestamp,
+  arrayUnion,
   getFirestore,
+  onSnapshot,
+  serverTimestamp,
+  deleteDoc
 } from "firebase/firestore";
 import {
   doc,
+  getDocs,
+  updateDoc,
+  query,
+  where,
+  setDoc,
+  collection,
   getDoc,
 } from "firebase/firestore";
 
 import {
+  getDownloadURL,
   getStorage,
+  ref,
+  uploadBytesResumable,
+  deleteObject
 } from "firebase/storage";
 
 const firebaseConfig = {
@@ -78,9 +93,7 @@ export const getUserFromDatabase = async (email) => {
   //let User;
   try{
     const docRef = doc(db, "users", email);
-    console.log("docRef",db, "users", email)
     const docSnap = await getDoc(docRef);
-    console.log("getUserFromDatabase",docSnap.data())
     return docSnap.data();
   }catch (error){
     console.log(error)

@@ -55,6 +55,7 @@ import DynamicNavbar from '../../components/DynamicNavbar';
 import DynamicFooter from '../../components/DynamicFooter';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import BackgroundImageURL from "../../assets/images/BackgroundImageURL.jpeg"
 
 function CareerSiteDescription() {
     const { id } = useParams()
@@ -80,7 +81,6 @@ function CareerSiteDescription() {
                 const response = await companyInfoGET(id);
                 // console.log("companie info data", response.data.company)
                 setCompanyInfo(response.data.company)
-                
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -210,7 +210,7 @@ function CareerSiteDescription() {
                         flexDirection: 'column', // Align items vertically
                         justifyContent: 'center', // Center items vertically
                         alignItems: 'center', // Center items horizontally
-                        backgroundImage: `url(${careerSiteCompanyData?.companies_details.background_image || "https://static.zohocdn.com/recruit/images/cover1.0e02dce62a260cd1dbbafeacf59e558a.jpg"})`, // Use dynamic image
+                        backgroundImage: `url(${careerSiteCompanyData?.companies_details.background_image || BackgroundImageURL})`, // Use dynamic image
                         backgroundSize: '110%', // Zoom effect
                         backgroundPosition: 'center',
                         color: '#fff',
@@ -314,7 +314,8 @@ function CareerSiteDescription() {
                                         <Typography 
                                             variant="body1" 
                                             color="primary"
-                                            onClick={() => navigate(`/jobs/Careers/${job?.id}/${encodeURIComponent(job?.title)}`, { state: { logo: companyInfo.logo, company: companyInfo.name, careerSiteCompanyData:careerSiteCompanyData } })}
+                                            // onClick={() => navigate(`/jobs/Careers/${job?.id}/${encodeURIComponent(job?.title)}`, { state: { logo: companyInfo.logo, company: companyInfo.name, careerSiteCompanyData:careerSiteCompanyData } })}
+                                            onClick={() => navigate(`/jobs/Careers/${job?.id}/${encodeURIComponent(job?.title)}`, { state: { logo: companyInfo.logo, company: companyInfo.name, careerSiteCompanyData: careerSiteCompanyData, isViewJobsClicked, companyInfo:companyInfo } })}
                                             sx={{ 
                                                 fontWeight: 'bold',
                                                 '&:hover': {

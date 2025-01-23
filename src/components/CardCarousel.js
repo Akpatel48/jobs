@@ -190,7 +190,7 @@ return (
                         backgroundColor: "rgba(25, 118, 210, 0.1)" // Add hover background color
                     }
                 }}
-                onClick={() => navigate('/all-companies')}
+                // onClick={() => navigate('/all-companies')}
             >
                 View all companies
             </Button>

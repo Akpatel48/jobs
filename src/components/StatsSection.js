@@ -2,7 +2,6 @@ import React from 'react';
 import { Container, Grid, Typography, Box } from '@mui/material';
 import CountUp from 'react-countup';
 import { useInView } from 'react-intersection-observer';
-import img1 from './8.webp'
 
 const StatsSection = ({ stats }) => {
     const { ref, inView } = useInView({
@@ -16,13 +15,7 @@ const StatsSection = ({ stats }) => {
             sx={{
                 color: 'black',
                 py: 5,
-                // backgroundImage: 'url(https://themewagon.github.io/jobboard/images/hero_1.jpg)',
-                backgroundImage: `url(${img1})`,
-                // background: 'linear-gradient(45deg, rgba(255, 0, 0, 1) 0%, rgba(0, 255, 0, 0.5) 50%, rgba(0, 0, 255, 1) 100%)',
-                // background: 'linear-gradient(187deg, rgba(34, 193, 195, 1) 0%, rgba(253, 187, 45, 1) 100%)',
-                // background: 'linear-gradient( rgba(34, 193, 195, 1) , rgba(253, 187, 45, 1) , rgb(73 125 218))',
-
-                // background: 'linear-gradient(109.6deg, rgba(254, 253, 205, 1) 11.2%, rgba(163, 230, 255, 1) 91.1%)',
+                backgroundImage: 'url(https://themewagon.github.io/jobboard/images/hero_1.jpg)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',

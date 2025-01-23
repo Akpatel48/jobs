@@ -32,7 +32,6 @@ import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { showToast } from "../../../utils/toast";
 import { useAddCandidateMutation} from '../../../redux/services/candidate/CandidateServices';
-import JobApplication from "../JobApplication";
 
 
 function CompleteAssesment({ disabled = false, assesmentId }) {
@@ -44,9 +43,9 @@ function CompleteAssesment({ disabled = false, assesmentId }) {
   const { webform } = useParams();
   const assesment = localStorage?.getItem("assesment");
   const temp = JSON.parse(assesment);
+  // console.log(temp);
   const dispatch = useDispatch();
   const { data, refetch } = useGetAssesmentCareerQuery(assesmentId ? assesmentId : temp);
-
   const assesmentData = useSelector((state) => state?.assesment?.assesment);
   // console.log("assesment from redux",assesmentData)
   let copyData = JSON.parse(JSON.stringify(data || [{}]));
@@ -54,7 +53,7 @@ function CompleteAssesment({ disabled = false, assesmentId }) {
 
 
   const handleChange = async (e, index) => {
-    console.log("cpydata 1", e.target)
+    // console.log("cpydata 1", e.target.checked)
     if (copyData.form[index].type === "C") {
       // console.log("cpydata 2", copyData)
       let ans = copyData.form[index].candidateAnswer
@@ -74,17 +73,15 @@ function CompleteAssesment({ disabled = false, assesmentId }) {
       copyData.form[index].candidateAnswer = e.target.value
     }
     // data[index].candidateAnswer = e?.target?.value;
-    console.log("cpydata 3", copyData)
+    // console.log("cpydata 3", copyData)
   };
 
-  <JobApplication handleSubmit/>
   const handleSubmit = () => {
     dispatch(assesmentforsubmit(copyData));
-    console.log("copyData",copyData);
-    
     showToast('success', 'Assessment Submitted');
     setOpen(true);
   };
+
   useEffect(() => {
     refetch();
   }, [webform]);
@@ -695,7 +692,7 @@ function CompleteAssesment({ disabled = false, assesmentId }) {
             justifyContent: "center",
           }}
         >
-          {disabled ? (
+          {disabled || !data ? (
             ""
           ) : (
             <Button
@@ -712,16 +709,6 @@ function CompleteAssesment({ disabled = false, assesmentId }) {
             </Button>
 
           )}
-          {/* <Snackbar open={open} autoHideDuration={3000} onClose={handleClose} sx={{ height: "10vh" }}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-              position:"absolute"
-            }} >
-            <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-              Asssesment Saved!
-            </Alert>
-          </Snackbar> */}
         </div>
       </Container>
     </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Container, Grid, Typography, IconButton, useTheme, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/system";
 import { Email as EmailIcon, Phone as PhoneIcon, LocationOn as LocationOnIcon, Facebook, Twitter, Instagram, LinkedIn, ArrowUpward } from "@mui/icons-material";
+import edjobster09 from "../assets/images/edjobster-09.png"
 
 const StyledFooter = styled("footer")(({ theme }) => ({
   backgroundColor: "#ffffff",
@@ -58,10 +59,10 @@ const Footer = () => {
   };
 
   const navigationLinks = [
-    "Home ",
-    "Jobs ",
-    "Registration ",
-    "About Us ",
+    { name: "Home", url: "/" },
+    { name: "Jobs", url: "/jobs" },
+    { name: "Registration", url: "/registrationform" },
+    { name: "About Us", url: "/about" },
   ];
 
   return (
@@ -72,15 +73,16 @@ const Footer = () => {
             <Typography variant="h6" fontWeight="bold" gutterBottom>
               Navigation
             </Typography>
-              {navigationLinks.map((link) => (
-                <Box key={link} sx={{ display: 'block', mb: 1 }}>
+              {navigationLinks.map(({ name, url }) => (
+                <Box key={name} sx={{ display: 'block', mb: 1 }}>
                   <FooterLink
                     variant="body2"
                     component="a"
+                    href={url} 
                     role="link"
-                    aria-label={`Navigate to ${link}`}
+                    aria-label={`Navigate to ${name}`}
                   >
-                    {link}
+                    {name}
                   </FooterLink>
               </Box>
             ))}
@@ -156,8 +158,9 @@ const Footer = () => {
           flexDirection={isMobile ? "column" : "row"}
         >
           <Typography variant="body2" color="textSecondary" align="center">
-            © {currentYear} Edjobster. All Rights Reserved.
+          Powered by 
           </Typography>
+          <img src={edjobster09} alt="Powered by Edjobster" style={{ marginLeft: "8px", height: "35px" }} />
         </Box>
 
         <BackToTop onClick={scrollToTop} aria-label="Back to top">

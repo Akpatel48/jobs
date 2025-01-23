@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { jobAction } from "../../../redux/job/JobReducer";
 
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -40,7 +40,7 @@ import 'react-phone-input-2/lib/style.css';
 import { skipToken } from '@reduxjs/toolkit/dist/query';
 import {
   useAddCandidateMutation,
-  useGetCandidateByIdQuery,
+   useGetCandidateByIdQuery,
   useAddCandidateWithResumeMutation,
   useAddParseResumeMutation,
 } from '../../../redux/services/candidate/CandidateServices';
@@ -56,11 +56,11 @@ import { apiUrl } from '../../../utils/api';
 import { useDesignationCareerGetQuery } from '../../../redux/services/settings/DesignationService';
 import { useGetSkillListQuery, useGetSubjectListQuery } from '../../../redux/services/settings/SkillServices';
 import { useDegreeCareerGetQuery } from '../../../redux/services/settings/DegreeService';
-import ResumeSelectorModal from '../resumeSelectorModal';
+import ResumeSelectorModal from '../../ResumeSelectorModal';
 
-function FillDetails({ disabled = false, userresume }) {
+function FillDetails({ disabled = false, userresume, resume, setResume }) {
   const { editCandidateId } = useParams();
-  console.log("userresume.......", userresume)
+  // console.log("editCandidateId", editCandidateId)
   const navigate = useNavigate();
   const dispatch = useDispatch()
   const webformDatafilledRedux = useSelector((state) => state?.job?.job)
@@ -72,8 +72,8 @@ function FillDetails({ disabled = false, userresume }) {
   const { data: skillData, refetch: getSkillDataRefetch } = useGetSkillListQuery()
   const { data: subjectData, refetch: getSubjectDataRefetch } = useGetSubjectListQuery()
   const { data: degreeData, refetch: getDegreeDataRefetch } = useDegreeCareerGetQuery()
-  //   const { data: candidateData, refetch: getRefetch } = useGetCandidateByIdQuery(editCandidateId, { skip: editCandidateId === undefined });
-  //   console.log("Candidate DATA INFO", candidateData)
+//   const { data: candidateData, refetch: getRefetch } = useGetCandidateByIdQuery(editCandidateId, { skip: editCandidateId === undefined });
+//   console.log("Candidate DATA INFO", candidateData)
   const [touchedFields, setTouchedFields] = useState({});
   const [isCurrentJob, setIsCurrentJob] = useState(false);
   const [value, setValue] = React.useState(dayjs('2000-08-18'));
@@ -148,27 +148,6 @@ function FillDetails({ disabled = false, userresume }) {
     '6_months',
   ]);
 
-
-  //resume shaper
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedJobId, setSelectedJobId] = useState(null)
-  const [savedResumes, setSavedResumes] = useState([
-    {
-      resumeId: 1,
-      // img: img1,
-      title: "My Profile",
-      description: "Description",
-      id: "id46876548",
-      idx: -1,
-    },
-  ]);
-
-  const handleJobApply = (jobId, jobData) => {
-    setSelectedJobId(jobId);
-    setIsModalOpen(true);
-  };
-
   const options = [
     { label: "English", value: "English" },
     { label: "Hindi", value: "Hindi" },
@@ -176,6 +155,12 @@ function FillDetails({ disabled = false, userresume }) {
     { label: "Social Science", value: "Social Science" },
     { label: "Other", value: "Other" },
   ];
+
+  // resume shaper
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedJobId, setSelectedJobId] = useState(null)
+  const [isResumeLoading, setIsResumeLoading] = useState(false); // New state for loading resumes
+
 
   const [countryId, setCountryId] = useState(skipToken);
   const [stateId, setStateId] = useState(skipToken);
@@ -187,21 +172,21 @@ function FillDetails({ disabled = false, userresume }) {
   const handleCurrentJobChange = (event) => {
     setIsCurrentJob(event.target.checked);
     if (event.target.checked) {
-      setProfessionalEndDate(null);
+      setProfessionalEndDate(null); 
     }
   };
 
   const handleRemoveForm = () => {
     if (experienceArray.length > 1) {
-      setExperienceArray(experienceArray.slice(0, -1));
+        setExperienceArray(experienceArray.slice(0, -1));
     } else {
-      alert("Cannot remove the last experience entry.");
+        alert("Cannot remove the last experience entry.");
     }
   };
 
   const handleEducationRemoveForm = () => {
     if (educationArray.length > 1) {
-      setEducationArray(educationArray.slice(0, -1));
+        setEducationArray(educationArray.slice(0, -1));
     }
   };
 
@@ -269,7 +254,7 @@ function FillDetails({ disabled = false, userresume }) {
     setNewFormData({
       ...newFormData,
       subjects: selectedValues,
-      selectedOptions: selectedOptions
+      selectedOptions:selectedOptions
     });
   };
 
@@ -360,18 +345,18 @@ function FillDetails({ disabled = false, userresume }) {
 
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-
+ 
   const { data: assessmentData, refetch: assessmentDataRefetech } = useGetAssesmentQuery();
   const [assessment, setAssessment] = useState(1);
   const handleChangeAssessment = (e) => setAssessment(e.target.value);
   const [UploadedFileName, setUploadedFileName] = useState('');
   const [Uploaded, setUploaded] = useState(false);
 
-  const { data: jobData, refetch: jobDataRefetch } = useGetJobListQuery();
+  // const { data: jobData, refetch: jobDataRefetch } = useGetJobListQuery();
   // console.log("get all job list", jobData)
   const [job, setJob] = useState(0);
   const handleChangeJob = (e) => setJob(e.target.value);
-
+  
   const { data: countryData, refetch: countryDataRefetch } = useGetCountryQuery();
   const { data: stateData, refetch: stateDataRefetch } = useGetStateQuery(countryId);
   const { data: cityData, refetch: cityDataRefetch } = useGetCityQuery(stateId);
@@ -402,20 +387,20 @@ function FillDetails({ disabled = false, userresume }) {
     marital_status: '',
     bachlor_degree: '',
     professional_degree: '',
-    date_of_birth: '',
+    date_of_birth:'',
     age: '',
     pincode: '',
     street: '',
-    state: '',
+    state:'',
     city: '',
     country: '',
     exp_years: '',
     highest_qualification: '',
     current_job_title: '',
-    cur_employer: '',
+    cur_employer:'',
     professional_certificate: '',
     curriculum_board: '',
-    fun_area: '',
+    fun_area:'',
     professional_start_date: `${value.get('year')}-${String(value.get('month') + 1).padStart(2, 0)}-${String(
       value.get('date')
     ).padStart(2, 0)}`,
@@ -431,8 +416,7 @@ function FillDetails({ disabled = false, userresume }) {
     pipeline_stage_status: '',
     user_experiences: experienceArray,
     user_educations: educationArray,
-    summary: '',
-    resume_id: "",
+    summary:'',
     resume_data: "",
 
   });
@@ -440,22 +424,22 @@ function FillDetails({ disabled = false, userresume }) {
 
   const [file, setFile] = useState(null);
 
-  const [resume, setResume] = useState(null);
+  // const [resume, setResume] = useState(null);
   const [resumeData, setResumeData] = useState({});
 
-
+  
   useEffect(() => {
     if (countryId !== skipToken) {
       stateDataRefetch();
     }
-  }, [countryId, stateDataRefetch]);
-
+  }, [countryId,stateDataRefetch]);
+  
   useEffect(() => {
     if (stateId !== skipToken) {
       cityDataRefetch();
     }
-  }, [stateId, cityDataRefetch]);
-
+  }, [stateId,cityDataRefetch]);
+  
   useEffect(() => {
     countryDataRefetch();
   }, [countryDataRefetch]);
@@ -467,14 +451,117 @@ function FillDetails({ disabled = false, userresume }) {
     getDegreeDataRefetch();
   }, []);
 
+  const handleJobApply = (jobId, jobData) => {
+    setSelectedJobId(jobId);
+    setIsModalOpen(true);
+  };
+
+  // resume shaper
+  const handleResumeSelect = async (resumeId) => {
+    // const savedResume = savedResumes.find(resume => resume.id === resumeId);
+    // console.log("resume_Id", resumeId);
+    const selectedResume = userresume.find(resume => resume.id === resumeId);
+    // console.log("resumeId", selectedResume );
+    setNewFormData({})
+
+    if (!selectedResume) return;
+
+    try {
+      const formattedExperiences = selectedResume.employmentHistory?.map(emp => ({
+        field1: emp.employer || '',
+        field2: emp.jobTitle || '',
+        field3: emp.description || '',
+        field4: emp.startDate || '',
+        field5: emp.endDate || ''
+      })) || [];
+
+      const lastEmployer = selectedResume.employmentHistory?.length > 0
+        ? selectedResume.employmentHistory[selectedResume.employmentHistory.length - 1]?.employer
+        : '';
+
+      console.log("lastEmployer", lastEmployer);
+
+
+      const formattedEducation = selectedResume.educationHistory?.map(edu => ({
+        field1: edu.school || '',         // School name
+        field2: edu.degree || '',         // Degree
+        field3: edu.description || '',     // Description/Specialization
+        field4: edu.startDate || '',      // Start date
+        field5: edu.endDate || ''         // End date
+      })) || [];
+
+
+      setExperienceArray(formattedExperiences);
+      setEducationArray(formattedEducation);
+
+      let streetData = selectedResume.address;
+      if (streetData.length > 100) {
+        streetData = streetData.substr(0, 90);
+      }
+
+      let calculatedAge = selectedResume.dateOfBirth
+      if (calculatedAge) {
+        const birthDate = dayjs(calculatedAge);
+        const today = dayjs();
+        calculatedAge = today.diff(birthDate, 'year');
+      }
+      
+
+      setNewFormData({
+        ...newFormData,
+        first_name: selectedResume.firstName || '',
+        middle_name: selectedResume.middleName || "",
+        last_name: selectedResume.lastName || '',
+        email: selectedResume.inputEmail || '',
+        mobile: selectedResume.phone || '',
+        // date_of_birth: selectedResume.DateOfBirth
+        //   ? `${selectedResume.DateOfBirth.get('year')}-${String(selectedResume.DateOfBirth.get('month') + 1).padStart(2, 0)}-${String(selectedResume.DateOfBirth.get('date')).padStart(2, 0)}`
+        //   : `${value.get('year')}-${String(value.get('month') + 1).padStart(2, 0)}-${String(
+        //     value.get('date')
+        //   ).padStart(2, 0)}`,
+        date_of_birth: selectedResume.dateOfBirth || '',
+        age: calculatedAge, 
+        cur_employer: lastEmployer || "",
+        gender: '',
+        marital_status: '',
+        exp_years: '',
+        cur_employer: '',
+        current_job_title: '',
+        professional_degree: selectedResume.educationHistory.degree || '',
+        highest_qualification: '',
+        curriculum_board: '',
+        fun_area: '',
+        notice_period: '',
+        street: streetData || '',
+        // country: data.Address[0].Country || '',
+        // state: data.Address[0].State || '',
+        // city: data.Address[0].City || '',
+        country: '',
+        state: '',
+        city: '',
+        pincode: selectedResume.postalCode || '',
+        skills: '',
+        summary: selectedResume.professionalSummary || '',
+        resume_data: JSON.stringify(selectedResume) || "",
+
+      });
+    }
+    catch (error) {
+      console.error('Error submitting application:', error);
+    }
+    setIsModalOpen(false);
+  };
+
   const handleFileChanges = (event) => {
     const file = event.target.files[0];
-
+    console.log("file....",file);
+    console.log("file....",file.name);
+    
     setResume(file);
-    setNewFormData((prevForm) => ({
-      ...prevForm,
-      resume: file,
-    }));
+    // setNewFormData((prevForm) => ({
+    //   ...prevForm,
+    //   resume: file,
+    // }));
   };
 
   useEffect(() => {
@@ -482,7 +569,7 @@ function FillDetails({ disabled = false, userresume }) {
       handleUpload();
     }
   }, [resume]);
-
+  
   const handleUpload = () => {
     if (resume) {
       setIsLoading(true)
@@ -539,7 +626,7 @@ function FillDetails({ disabled = false, userresume }) {
           }
           // for Skills
           const extractedSkills = data.SegregatedSkill.map(skillObj => skillObj.Skill);
-
+          
           const newArray = data.SegregatedExperience.map((originalObject) => {
             let formattedStartDate = '';
             let formattedEndDate = '';
@@ -632,7 +719,7 @@ function FillDetails({ disabled = false, userresume }) {
             city: '',
             pincode: data.Address[0].ZipCode || '',
             skills: '',
-            summary: data.Summary || ''
+            summary:data.Summary || ''
           });
           // Handle the response from the server
           setIsLoading(false);
@@ -645,165 +732,6 @@ function FillDetails({ disabled = false, userresume }) {
     }
   };
 
-  console.log("selectedResume",userresume);
-
-  //resume shaper
-  // let calculatedAge = ''
-  const handleResumeSelect = async (resumeId) => {
-    // const savedResume = savedResumes.find(resume => resume.id === resumeId);
-    const selectedResume = userresume.find(resume => resume.id === resumeId);
-    console.log("resumeId", selectedResume);
-    setNewFormData({})
-
-    if (!selectedResume) return;
-
-    try {
-      const formattedExperiences = selectedResume.employmentHistory?.map(emp => ({
-        field1: emp.employer || '',
-        field2: emp.jobTitle || '',
-        field3: emp.description || '',
-        field4: emp.startDate || '',
-        field5: emp.endDate || ''
-      })) || [];
-
-      const lastEmployer = selectedResume.employmentHistory?.length > 0
-        ? selectedResume.employmentHistory[selectedResume.employmentHistory.length - 1]?.employer
-        : '';
-
-      console.log("lastEmployer", lastEmployer);
-
-
-      const formattedEducation = selectedResume.educationHistory?.map(edu => ({
-        field1: edu.school || '',         // School name
-        field2: edu.degree || '',         // Degree
-        field3: edu.description || '',     // Description/Specialization
-        field4: edu.startDate || '',      // Start date
-        field5: edu.endDate || ''         // End date
-      })) || [];
-
-
-      setExperienceArray(formattedExperiences);
-      setEducationArray(formattedEducation);
-
-      let streetData = selectedResume.address;
-      if (streetData.length > 100) {
-        streetData = streetData.substr(0, 90);
-      }
-
-      let calculatedAge = selectedResume.dateOfBirth
-      if (calculatedAge) {
-        const birthDate = dayjs(calculatedAge);
-        const today = dayjs();
-        calculatedAge = today.diff(birthDate, 'year');
-      }
-      
-
-      setNewFormData({
-        ...newFormData,
-        first_name: selectedResume.firstName || '',
-        middle_name: selectedResume.middleName || "",
-        last_name: selectedResume.lastName || '',
-        email: selectedResume.inputEmail || '',
-        mobile: selectedResume.phone || '',
-        // date_of_birth: selectedResume.DateOfBirth
-        //   ? `${selectedResume.DateOfBirth.get('year')}-${String(selectedResume.DateOfBirth.get('month') + 1).padStart(2, 0)}-${String(selectedResume.DateOfBirth.get('date')).padStart(2, 0)}`
-        //   : `${value.get('year')}-${String(value.get('month') + 1).padStart(2, 0)}-${String(
-        //     value.get('date')
-        //   ).padStart(2, 0)}`,
-        date_of_birth: selectedResume.dateOfBirth || '',
-        age: calculatedAge, 
-        cur_employer: lastEmployer || "",
-        gender: '',
-        marital_status: '',
-        exp_years: '',
-        cur_employer: '',
-        current_job_title: '',
-        professional_degree: selectedResume.educationHistory.degree || '',
-        highest_qualification: '',
-        curriculum_board: '',
-        fun_area: '',
-        notice_period: '',
-        street: streetData || '',
-        // country: data.Address[0].Country || '',
-        // state: data.Address[0].State || '',
-        // city: data.Address[0].City || '',
-        country: '',
-        state: '',
-        city: '',
-        pincode: selectedResume.postalCode || '',
-        skills: '',
-        summary: selectedResume.professionalSummary || '',
-        resume_id: selectedResume.id || "",
-        resume_data: JSON.stringify(selectedResume) || "",
-
-
-      });
-    }
-    catch (error) {
-      console.error('Error submitting application:', error);
-    }
-
-    // try {
-    //   const liveDomain = 'http://localhost:3000';
-    //   const skillsString = selectedResume.skills
-    //     .map(skill => skill.name?.trim())
-    //     .filter(Boolean) // Remove empty skills
-    //     .join(',');
-
-    //   const formData = {
-    //     job: String(selectedJobId),
-    //     login_email: selectedResume.email,
-    //     first_name: selectedResume.firstName || '',
-    //     middle_name: selectedResume.middleName || '',
-    //     last_name: selectedResume.lastName || '',
-    //     mobile: selectedResume.phone || '',
-    //     alternate_mobile: '',
-    //     email: selectedResume.inputEmail || '',
-    //     alternate_email: '',
-    //     gender: '',
-    //     marital_status: '',
-    //     bachlor_degree: '',
-    //     professional_degree: '',
-    //     date_of_birth: selectedResume.dateOfBirth || '',
-    //     age: selectedResume.age || null, // Calculate age if needed
-    //     pincode: selectedResume.postalCode || null,
-    //     state: '', // Map to state ID if available
-    //     country: '', // Map to country ID if available
-    //     city: selectedResume.city || '',
-    //     // street: selectedResume.address || ' ',
-    //     exp_years: null, // Map experience years if available
-    //     highest_qualification: '', // Map highest qualification if available
-    //     current_job_title: selectedResume.jobTitle || '',
-    //     cur_employer: '', // Map current employer if available
-    //     curriculum_board: '',
-    //     fun_area: '',
-    //     professional_start_date: null,
-    //     professional_end_date: null,
-    //     currently_working: false,
-    //     notice_period: '',
-    //     resume: savedResume.img.startsWith('/static') ? `${liveDomain}${savedResume.img}` : savedResume.img,
-    //     certificate: null,
-    //     cover_letter: null,
-    //     pipeline_stage: '',
-    //     pipeline_stage_status: '',
-    //     user_experiences: selectedResume.employmentHistory || [],
-    //     user_educations: selectedResume.educationHistory || [],
-    //     headline: null,
-    //     summary: selectedResume.professionalSummary || '',
-    //     job_title: selectedResume.jobTitle,
-    //     Bachelors_degree: selectedResume.educationHistory.degree,
-    //     skills: skillsString || " ",
-    //   };
-
-
-
-
-    // } catch (error) {
-    //   console.error('Error submitting application:', error);
-    // }
-
-    setIsModalOpen(false);
-  };
 
 
   const handleFileChange = (event) => {
@@ -851,7 +779,7 @@ function FillDetails({ disabled = false, userresume }) {
     }));
   }
 
-
+  
   // const [job,setJob] = useState(0);
   // const handleChangeJob = (e) => setJob(e.target.value);
 
@@ -885,7 +813,7 @@ function FillDetails({ disabled = false, userresume }) {
         ...prev,
         city: selectedCity ? selectedCity.id : '',
       }));
-    } else if (name === 'skills') {
+    }else if (name === 'skills') {
       // Ensure value is always an array of IDs
       const skillIds = Array.isArray(value) ? value : [value];
       setNewFormData((prev) => ({
@@ -898,7 +826,7 @@ function FillDetails({ disabled = false, userresume }) {
         ...prev,
         subjects: Array.isArray(value) ? value : [value]
       }));
-    } else {
+     } else {
       setNewFormData((prev) => ({
         ...prev,
         [name]: value,
@@ -988,17 +916,17 @@ function FillDetails({ disabled = false, userresume }) {
   //   }
   // };
 
-  useEffect(() => {
+  useEffect(()=>{
     setNewFormData(webformDatafilledRedux)
     // console.log("candidate details",webformDatafilledRedux)
     // console.log("Highest Qualification:", webformDatafilledRedux.highest_qualification);
-  }, [])
+  },[])
 
 
   useEffect(() => {
     dispatch(jobAction(newFormData));
   }, [newFormData])
-
+  
   // useEffect(() => {
   //   // console.log(AddCandidateInfo.data);
   //   if (AddCandidateInfo.isError) {
@@ -1027,6 +955,15 @@ function FillDetails({ disabled = false, userresume }) {
     // You can return a default value or handle it according to your requirements.
     return null; // or throw an error, return an empty string, etc.
   };
+
+  useEffect(() => {
+    setIsResumeLoading(true);
+    // Simulate fetching resumes
+    // Replace this with your actual fetching logic
+    setTimeout(() => {
+      setIsResumeLoading(false);
+    }, 2000); // Simulate a 2-second loading time
+  }, []);
 
   // function handleSubject(e) {
   //   if (e.target.value === "Other") {
@@ -1063,13 +1000,13 @@ function FillDetails({ disabled = false, userresume }) {
       {/* <Card sx={{ marginTop: '1%', padding: '10px' }}> */}
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Typography
-            variant="h5"
-            sx={{
-              marginBottom: '2%',
-              marginLeft: '12%',
-              marginTop: '3%',
-              backgroundColor: 'transparent !important'
+          <Typography 
+            variant="h5" 
+            sx={{ 
+              marginBottom: '2%', 
+              marginLeft: '12%', 
+              marginTop: '3%', 
+              backgroundColor: 'transparent !important' 
             }}
           >
             Attachment
@@ -1080,24 +1017,24 @@ function FillDetails({ disabled = false, userresume }) {
             <InputLabel>Resume</InputLabel>
           </Grid>
           <Grid item xs={12} sm={6} sx={{ marginTop: 0 }} md={4}>
-            {userresume ? <Button variant="contained" color="primary" onClick={handleJobApply} disabled={disabled}>select resume</Button>:
-            
-            <Input
-              type="file"
-              sx={{ width: '90%' }}
-              disabled={disabled}
-              required
-              accept=".pdf,.doc,.docx"
-              aria-describedby="my-helper-text"
-              id="upload-resume"
-              label="Upload Resume"
-              variant="standard"
-              onChange={handleFileChanges}
-            />
-          }
-            {/* <Grid item>
+            {isResumeLoading ? ( // Check if resumes are loading
+              <CircularProgress /> // Show loader while loading
+            ) : userresume ? (
               <Button variant="contained" color="primary" onClick={handleJobApply} disabled={disabled}>select resume</Button>
-            </Grid> */}
+            ) : (
+              <Input
+                type="file"
+                sx={{ width: '90%' }}
+                disabled={disabled}
+                required
+                accept=".pdf,.doc,.docx"
+                aria-describedby="my-helper-text"
+                id="upload-resume"
+                label="Upload Resume"
+                variant="standard"
+                onChange={handleFileChanges}
+              />
+            )}
           </Grid>
           {/* <Grid item>
             <Button variant="contained" size="small" disabled={!resume} onClick={handleUpload}>
@@ -1135,14 +1072,14 @@ function FillDetails({ disabled = false, userresume }) {
 
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Typography
-            variant="h5"
-            sx={{
+          <Typography 
+            variant="h5" 
+            sx={{ 
               width: '300px',
-              marginBottom: '2%',
-              marginLeft: '12%',
-              marginTop: '2%',
-              backgroundColor: 'transparent !important'
+              marginBottom: '2%', 
+              marginLeft: '12%', 
+              marginTop: '2%', 
+              backgroundColor: 'transparent !important' 
             }}
           >
             Personal Details
@@ -1235,63 +1172,63 @@ function FillDetails({ disabled = false, userresume }) {
               helperText={touchedFields.mobile && !/^\d+$/.test(newFormData?.mobile) ? 'Invalid mobile number' : ''}
             /> */}
             <FormControl variant="standard" sx={{ width: '90%' }}>
-              <InputLabel
-                shrink
-                sx={{
-                  transform: 'translate(0, -1.5px) scale(0.75)',
-                  transformOrigin: 'top left'
-                }}
-              >
-                Mobile Number
-              </InputLabel>
-              <PhoneInput
-                country={'in'}
-                value={newFormData?.mobile || ''}
-                onChange={(value) => {
-                  // Only update if value is valid phone number
-                  if (value.match(/^\+?[\d\s-]+$/)) {
-                    handleChangenewFormData('mobile', value);
-                  }
-                }}
-                disabled={disabled}
-                inputStyle={{
-                  width: '100%',
-                  height: '32px',
-                  fontSize: '16px',
-                  borderTop: 'none',
-                  borderLeft: 'none',
-                  borderRight: 'none',
-                  borderBottom: '1px solid rgba(0, 0, 0, 0.42)',
-                  borderRadius: '0',
-                  backgroundColor: 'transparent',
-                }}
-                buttonStyle={{
-                  border: 'none',
-                  backgroundColor: 'transparent',
-                  padding: '0',
-                  borderRadius: '0'
-                }}
-                dropdownStyle={{
-                  width: '300px'
-                }}
-                containerStyle={{
-                  marginTop: '16px'
-                }}
-                // enableSearch={true}
-                searchPlaceholder="Search country..."
-                placeholder=''
-                specialLabel=""
-                inputProps={{
-                  required: true,
-                  onBlur: () => handleFieldTouch('mobile')
-                }}
-              />
-              {touchedFields.mobile && !/^\+?[\d\s-]{7,20}$/.test(newFormData?.mobile) && (
-                <FormHelperText error>
-                  Invalid mobile number
-                </FormHelperText>
-              )}
-            </FormControl>
+                <InputLabel
+                  shrink
+                  sx={{
+                    transform: 'translate(0, -1.5px) scale(0.75)',
+                    transformOrigin: 'top left'
+                  }}
+                >
+                  Mobile Number
+                </InputLabel>
+                <PhoneInput
+                  country={'in'}
+                  value={newFormData?.mobile || ''}
+                  onChange={(value) => {
+                    // Only update if value is valid phone number
+                    if (value.match(/^\+?[\d\s-]+$/)) {
+                      handleChangenewFormData('mobile', value);
+                    }
+                  }}
+                  disabled={disabled}
+                  inputStyle={{
+                    width: '100%',
+                    height: '32px',
+                    fontSize: '16px',
+                    borderTop: 'none',
+                    borderLeft: 'none',
+                    borderRight: 'none',
+                    borderBottom: '1px solid rgba(0, 0, 0, 0.42)',
+                    borderRadius: '0',
+                    backgroundColor: 'transparent',
+                  }}
+                  buttonStyle={{
+                    border: 'none',
+                    backgroundColor: 'transparent',
+                    padding: '0',
+                    borderRadius: '0'
+                  }}
+                  dropdownStyle={{
+                    width: '300px'
+                  }}
+                  containerStyle={{
+                    marginTop: '16px'
+                  }}
+                  // enableSearch={true}
+                  searchPlaceholder="Search country..."
+                  placeholder=''
+                  specialLabel=""
+                  inputProps={{
+                    required: true,
+                    onBlur: () => handleFieldTouch('mobile')
+                  }}
+                />
+                {touchedFields.mobile && !/^\+?[\d\s-]{7,20}$/.test(newFormData?.mobile) && (
+                  <FormHelperText error>
+                    Invalid mobile number
+                  </FormHelperText>
+                )}
+              </FormControl>
           </Grid>
           <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
             {/* <TextField
@@ -1444,18 +1381,18 @@ function FillDetails({ disabled = false, userresume }) {
         </Grid>
 
         <Grid item xs={12}>
-          <Typography
-            variant="h5"
-            sx={{
-              marginBottom: '2%',
-              marginLeft: '12%',
-              marginTop: '2%',
-              backgroundColor: 'transparent !important'
+          <Typography 
+            variant="h5" 
+            sx={{ 
+              marginBottom: '2%', 
+              marginLeft: '12%', 
+              marginTop: '2%', 
+              backgroundColor: 'transparent !important' 
             }}
           >
             Professional Details
           </Typography>
-        </Grid>
+        </Grid>  
         <Grid container spacing={2} sx={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '60%' }}>
           <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
             <TextField
@@ -1469,7 +1406,7 @@ function FillDetails({ disabled = false, userresume }) {
               name="exp_years"
               onChange={(e) => handleChangenewFormData(e.target.name, +e.target.value)}
             />
-          </Grid>
+          </Grid>  
           <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
             <FormControl variant="standard" sx={{ width: '100%' }}>
               <InputLabel id="demo-simple-select-standard-label">Highest Qualification held</InputLabel>
@@ -1482,8 +1419,16 @@ function FillDetails({ disabled = false, userresume }) {
                 value={newFormData?.highest_qualification || ''}
                 name="highest_qualification"
                 label="Select"
-                inputProps={{ maxLength: 100 }}
+                inputProps={{ maxLength: 100 }} 
                 onChange={(e) => handleChangenewFormData('highest_qualification', e.target.value)}
+                MenuProps={{
+                  PaperProps: {
+                      style: {
+                          maxHeight: 48 * 4 + 8, 
+                          width: 250,
+                      },
+                  },
+                }}
               >
                 {qualificationOptions.map((option) => (
                   <MenuItem key={option} value={option}>
@@ -1492,7 +1437,7 @@ function FillDetails({ disabled = false, userresume }) {
                 ))}
               </Select>
             </FormControl>
-          </Grid>
+          </Grid>  
           <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
             <TextField
               sx={{ width: '90%' }}
@@ -1515,7 +1460,7 @@ function FillDetails({ disabled = false, userresume }) {
               color="primary"
             />
             <Typography component="span" sx={{ backgroundColor: 'transparent !important' }}>I am currently working here</Typography>
-          </Grid>
+          </Grid> 
           <Grid item xs={12} sm={2} sx={{ marginTop: 1 }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DesktopDatePicker
@@ -1560,7 +1505,7 @@ function FillDetails({ disabled = false, userresume }) {
                   );
                 }}
                 renderInput={(params) => <TextField {...params} />}
-              // disabled={isCurrentJob} 
+                // disabled={isCurrentJob} 
               />
             </LocalizationProvider>
           </Grid>
@@ -1593,7 +1538,7 @@ function FillDetails({ disabled = false, userresume }) {
                     variant="standard"
                     label="Current Job Title"
                     placeholder="Select Current Job Title"
-                    sx={{ width: '90%' }}
+                    sx={{ width: '90%' }} 
                   />
                 )}
                 ListboxProps={{
@@ -1643,7 +1588,7 @@ function FillDetails({ disabled = false, userresume }) {
                     variant="standard"
                     label="Professional Degree"
                     placeholder="Select Professional Degree"
-                    sx={{ width: '90%' }}
+                    sx={{ width: '90%' }} 
                   />
                 )}
                 ListboxProps={{
@@ -1668,6 +1613,14 @@ function FillDetails({ disabled = false, userresume }) {
                 name="curriculum_board"
                 label="Select"
                 onChange={(e) => handleChangenewFormData(e?.target?.name, e?.target?.value)}
+                MenuProps={{
+                  PaperProps: {
+                      style: {
+                          maxHeight: 48 * 4 + 8, 
+                          width: 250,
+                      },
+                  },
+                }}
               >
                 {educationBoardOptions.map((option) => (
                   <MenuItem key={option} value={option}>
@@ -1690,6 +1643,14 @@ function FillDetails({ disabled = false, userresume }) {
                 name="fun_area"
                 label="Select"
                 onChange={(e) => handleChangenewFormData(e?.target?.name, e?.target?.value)}
+                MenuProps={{
+                  PaperProps: {
+                      style: {
+                          maxHeight: 48 * 4 + 8, 
+                          width: 250,
+                      },
+                  },
+                }}
               >
                 {jobRoleOptions.map((option) => (
                   <MenuItem key={option} value={option}>
@@ -1712,6 +1673,14 @@ function FillDetails({ disabled = false, userresume }) {
                 name="notice_period"
                 label="Select"
                 onChange={(e) => handleChangenewFormData(e?.target?.name, e?.target?.value)}
+                MenuProps={{
+                  PaperProps: {
+                      style: {
+                          maxHeight: 48 * 4 + 8, 
+                          width: 250,
+                      },
+                  },
+                }}
               >
                 {noticePeriodOptions.map((option) => (
                   <MenuItem key={option} value={option}>
@@ -1782,13 +1751,13 @@ function FillDetails({ disabled = false, userresume }) {
         </Grid>
 
         <Grid item xs={12}>
-          <Typography
-            variant="h5"
-            sx={{
-              marginBottom: '2%',
-              marginLeft: '12%',
-              marginTop: '2%',
-              backgroundColor: 'transparent !important'
+          <Typography 
+            variant="h5" 
+            sx={{ 
+              marginBottom: '2%', 
+              marginLeft: '12%', 
+              marginTop: '2%', 
+              backgroundColor: 'transparent !important' 
             }}
           >
             Address
@@ -1807,17 +1776,17 @@ function FillDetails({ disabled = false, userresume }) {
               name="street"
               onChange={(e) => handleChangenewFormData(e.target.name, e.target.value)}
               inputProps={{ maxLength: 100 }}
-              error={touchedFields.street && newFormData?.street.length > 100}
-              helperText={touchedFields.street && newFormData?.street.length > 100 ? 'Street cannot exceed 100 characters' : ''}
+              error={touchedFields.street && newFormData?.street.length > 100} 
+              helperText={touchedFields.street && newFormData?.street.length > 100 ? 'Street cannot exceed 100 characters' : ''} 
             />
           </Grid>
           <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
             <FormControl variant="standard" sx={{ width: '90%' }}>
               <Typography variant="body1"
-                sx={{
-                  fontWeight: 'normal',
-                  backgroundColor: 'transparent !important'
-                }}
+              sx={{ 
+                fontWeight: 'normal',
+                backgroundColor: 'transparent !important'
+              }}
               >
                 Country
               </Typography>
@@ -1833,10 +1802,10 @@ function FillDetails({ disabled = false, userresume }) {
           <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
             <FormControl variant="standard" sx={{ width: '90%' }}>
               <Typography variant="body1"
-                sx={{
-                  fontWeight: 'normal',
-                  backgroundColor: 'transparent !important'
-                }}
+              sx={{ 
+                fontWeight: 'normal',
+                backgroundColor: 'transparent !important'
+              }}
               >
                 State
               </Typography>
@@ -1855,7 +1824,7 @@ function FillDetails({ disabled = false, userresume }) {
           <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
             <FormControl variant="standard" sx={{ width: '90%' }}>
               <Typography variant="body1"
-                sx={{
+                sx={{ 
                   fontWeight: 'normal',
                   backgroundColor: 'transparent !important'
                 }}
@@ -1894,10 +1863,10 @@ function FillDetails({ disabled = false, userresume }) {
           <Typography
             variant="h5"
             sx={{
-              marginBottom: '2%',
-              marginLeft: '12%',
-              marginTop: '2%',
-              backgroundColor: 'transparent !important'
+            marginBottom: '2%',
+            marginLeft: '12%',
+            marginTop: '2%',
+            backgroundColor: 'transparent !important'
             }}
           >
             Skills
@@ -1936,10 +1905,10 @@ function FillDetails({ disabled = false, userresume }) {
           <Typography
             variant="h5"
             sx={{
-              marginBottom: '2%',
-              marginLeft: '12%',
-              marginTop: '2%',
-              backgroundColor: 'transparent !important'
+            marginBottom: '2%',
+            marginLeft: '12%',
+            marginTop: '2%',
+            backgroundColor: 'transparent !important'
             }}
           >
             Experience
@@ -1947,254 +1916,262 @@ function FillDetails({ disabled = false, userresume }) {
         </Grid>
         <Grid container spacing={2} sx={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '60%' }}>
           {experienceArray.map((formData, index) => (
-            <Grid container spacing={2} key={index}>
-              <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
-                <TextField
-                  sx={{ width: '90%' }}
-                  disabled={disabled}
-                  required
-                  id="standard-required"
-                  label="Name of Company"
-                  value={formData?.field1}
-                  variant="standard"
-                  name="company_name"
-                  onChange={(e) => handleFormChange(index, 'field1', e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
-                <TextField
-                  sx={{ width: '90%' }}
-                  disabled={disabled}
-                  id="standard-required"
-                  label="Designation"
-                  variant="standard"
-                  value={formData?.field2}
-                  name="designations"
-                  onChange={(e) => handleFormChange(index, 'field2', e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12} sx={{ marginTop: 1 }}>
-                <FormControl fullWidth variant="standard">
-                  <Box
-                    sx={{
-                      width: '90%',
-                      padding: '10px',
-                      boxSizing: 'border-box',
-                    }}
-                  >
-                    <TextareaAutosize
-                      disabled={disabled}
-                      id="my-textarea"
-                      aria-label="textarea"
-                      placeholder="Job Responsibilities"
-                      name="job_responsibility"
-                      value={formData?.field3}
-                      onChange={(e) => handleFormChange(index, 'field3', e.target.value)}
-                      minRows={5}
-                      style={{ width: '100%', padding: '10px', boxSizing: 'border-box' }}
-                    />
-                  </Box>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={3} sx={{ marginTop: 1 }}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DesktopDatePicker
-                    sx={{ width: '90%' }}
-                    disabled={disabled}
-                    disableFuture
-                    label="From"
-                    inputFormat="YYYY-MM-DD"
-                    value={formData?.field4}
-                    onChange={(e) => handleChangeExperienceStartDate(index, 'field4', e)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
-              </Grid>
-              <Grid item xs={12} sm={3} sx={{ marginTop: 1 }}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DesktopDatePicker
-                    sx={{ width: '90%' }}
-                    disabled={disabled}
-                    disableFuture
-                    label="To"
-                    inputFormat="YYYY-MM-DD"
-                    value={formData?.field5}
-                    onChange={(e) => handleChangeExperienceEndDate(index, 'field5', e)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
-              </Grid>
+          <Grid container spacing={2} key={index}>
+            <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
+              <TextField
+                sx={{ width: '90%' }}
+                disabled={disabled}
+                required
+                id="standard-required"
+                label="Name of Company"
+                value={formData?.field1}
+                variant="standard"
+                name="company_name"
+                onChange={(e) => handleFormChange(index, 'field1', e.target.value)}
+              />
             </Grid>
-          ))}
-          <Grid container spacing={2} sx={{ marginTop: 2 }}>
-            <Grid item>
-              <Button variant="contained" color="primary" onClick={handleAddForm} disabled={disabled}>Add Experience</Button>
-            </Grid>
-            {experienceArray.length > 1 && (
-              <Grid item>
-                <Button variant="contained" color="primary" onClick={handleRemoveForm} disabled={disabled}>Remove Experience</Button>
-              </Grid>
-            )}
-          </Grid>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Typography
-            variant="h5"
-            sx={{
-              marginBottom: '2%',
-              marginLeft: '12%',
-              marginTop: '2%',
-              backgroundColor: 'transparent !important'
-            }}
-          >
-            Education
-          </Typography>
-        </Grid>
-        <Grid container spacing={2} sx={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '60%' }}>
-          {educationArray.map((formData, index) => (
-            <Grid container spacing={2} key={index}>
-              <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
-                <TextField
-                  sx={{ width: '90%' }}
-                  disabled={disabled}
-                  required
-                  id="standard-required"
-                  label="School Name"
-                  variant="standard"
-                  value={formData?.field1 || ''}
-                  name="school_name"
-                  onChange={(e) => handleEducationFormChange(index, 'field1', e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
-                <FormControl variant="standard" sx={{ width: '100%' }}>
-                  <InputLabel id="demo-simple-select-standard-label">Degree</InputLabel>
-                  <Select
-                    sx={{ width: '90%' }}
-                    disabled={disabled}
-                    margin="dense"
-                    variant="standard"
-                    fullWidth
-                    value={formData?.field2 || ''}
-                    name="Degree"
-                    label="Select"
-                    onChange={(e) => handleEducationFormChange(index, 'field2', e.target.value)}
-                  >
-                    {educationalDegreeOptions.map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
-                <TextField
-                  sx={{ width: '90%' }}
-                  disabled={disabled}
-                  margin="dense"
-                  variant="standard"
-                  label="Specialization"
-                  fullWidth
-                  value={formData?.field3 || ''}
-                  name="Specialization"
-                  onChange={(e) => handleEducationFormChange(index, 'field3', e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3} sx={{ marginTop: 1 }}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DesktopDatePicker
-                    sx={{ width: '90%' }}
-                    disabled={disabled}
-                    disableFuture
-                    label="Start Date"
-                    inputFormat="YYYY-MM-DD"
-                    value={formData?.field4}
-                    onChange={(e) => handleChangeEducationStartDate(index, 'field4', e)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
-              </Grid>
-              <Grid item xs={12} sm={3} sx={{ marginTop: 1 }}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DesktopDatePicker
-                    sx={{ width: '90%' }}
-                    disabled={disabled}
-                    disableFuture
-                    label="End Date"
-                    inputFormat="YYYY-MM-DD"
-                    value={formData?.field5}
-                    onChange={(e) => handleChangeEducationEndDate(index, 'field5', e)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
-              </Grid>
-            </Grid>
-          ))}
-          <Grid container spacing={2} sx={{ marginTop: 2 }}>
-            <Grid item>
-              <Button variant="contained" color="primary" onClick={handleEducationAddForm} disabled={disabled}>Add Education</Button>
-            </Grid>
-            {educationArray.length > 1 && (
-              <Grid item>
-                <Button variant="contained" color="primary" onClick={handleEducationRemoveForm} disabled={disabled}>Remove Education</Button>
-              </Grid>
-            )}
-          </Grid>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Typography
-            variant="h5"
-            sx={{
-              marginBottom: '2%',
-              marginLeft: '12%',
-              marginTop: '2%',
-              backgroundColor: 'transparent !important'
-            }}
-          >
-            Attachment
-          </Typography>
-        </Grid>
-        <Grid container spacing={2} sx={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '60%' }}>
           <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
-            <InputLabel sx={{ textAlign: 'left' }}>Cover Letter</InputLabel>
-            <Input
-              type="file"
+            <TextField
               sx={{ width: '90%' }}
               disabled={disabled}
-              required
-              aria-describedby="my-helper-text"
               id="standard-required"
-              label="Upload Resume"
+              label="Designation"
               variant="standard"
-              name="cover_letter"
-              onChange={handleCoverLetterFileChange}
+              value={formData?.field2}
+              name="designations"
+              onChange={(e) => handleFormChange(index, 'field2', e.target.value)}
             />
-            {newFormData?.cover_letter && <p>Selected File: {newFormData?.cover_letter.name}</p>}
-            {/* <Typography>{extractFileName(newFormData?.cover_letter)}</Typography> */}
           </Grid>
-          <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
-            <InputLabel sx={{ textAlign: 'left' }}>Certificate</InputLabel>
-            <Input
-              type="file"
+          <Grid item xs={12} sx={{ marginTop: 1 }}>
+            <FormControl fullWidth variant="standard">
+            <Box
+                sx={{
+                  width: '90%',
+                  padding: '10px',
+                  boxSizing: 'border-box',
+                }}
+              >
+                <TextareaAutosize
+                  disabled={disabled}
+                  id="my-textarea"
+                  aria-label="textarea"
+                  placeholder="Job Responsibilities"
+                  name="job_responsibility"
+                  value={formData?.field3}
+                  onChange={(e) => handleFormChange(index, 'field3', e.target.value)}
+                  minRows={5}
+                  style={{ width: '100%', padding: '10px', boxSizing: 'border-box' }}
+                />
+              </Box>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={3} sx={{ marginTop: 1 }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DesktopDatePicker
               sx={{ width: '90%' }}
               disabled={disabled}
-              required
-              aria-describedby="my-helper-text"
-              id="standard-required"
-              label="Upload Resume"
-              variant="standard"
-              name="certificate"
-              onChange={handleCertificateFileChange}
-            />
-            {newFormData?.certificate && <p>Selected File: {newFormData?.certificate.name}</p>}
-            {/* <Typography>{extractFileName(newFormData?.certificate)}</Typography> */}
+              disableFuture
+              label="From"
+              inputFormat="YYYY-MM-DD"
+              value={formData?.field4}
+              onChange={(e) => handleChangeExperienceStartDate(index, 'field4', e)}
+              renderInput={(params) => <TextField {...params} />}
+              />
+            </LocalizationProvider>
           </Grid>
+          <Grid item xs={12} sm={3} sx={{ marginTop: 1 }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DesktopDatePicker
+              sx={{ width: '90%' }}
+              disabled={disabled}
+              disableFuture
+              label="To"
+              inputFormat="YYYY-MM-DD"
+              value={formData?.field5}
+              onChange={(e) => handleChangeExperienceEndDate(index, 'field5', e)}
+              renderInput={(params) => <TextField {...params} />}
+              />
+            </LocalizationProvider>
+          </Grid>
+        </Grid>
+        ))}
+        <Grid container spacing={2} sx={{ marginTop: 2 }}>
+          <Grid item>
+            <Button variant="contained" color="primary" onClick={handleAddForm} disabled={disabled}>Add Experience</Button>
+          </Grid>
+          {experienceArray.length > 1 && (
+          <Grid item>
+            <Button variant="contained" color="primary" onClick={handleRemoveForm} disabled={disabled}>Remove Experience</Button>
+          </Grid>
+          )}
+        </Grid>
+        </Grid>
+
+      <Grid item xs={12}>
+        <Typography
+        variant="h5"
+        sx={{
+        marginBottom: '2%',
+        marginLeft: '12%',
+        marginTop: '2%',
+        backgroundColor: 'transparent !important'
+        }}
+        >
+          Education
+        </Typography>
+      </Grid>
+      <Grid container spacing={2} sx={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '60%' }}>
+        {educationArray.map((formData, index) => (
+        <Grid container spacing={2} key={index}>
+          <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
+            <TextField
+            sx={{ width: '90%' }}
+            disabled={disabled}
+            required
+            id="standard-required"
+            label="School Name"
+            variant="standard"
+            value={formData?.field1 || ''}
+            name="school_name"
+            onChange={(e) => handleEducationFormChange(index, 'field1', e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
+            <FormControl variant="standard" sx={{ width: '100%' }}>
+              <InputLabel id="demo-simple-select-standard-label">Degree</InputLabel>
+              <Select
+                sx={{ width: '90%' }}
+                disabled={disabled}
+                margin="dense"
+                variant="standard"
+                fullWidth
+                value={formData?.field2 || ''}
+                name="Degree"
+                label="Select"
+                onChange={(e) => handleEducationFormChange(index, 'field2', e.target.value)}
+                MenuProps={{
+                  PaperProps: {
+                      style: {
+                          maxHeight: 48 * 4 + 8, 
+                          width: 250,
+                      },
+                  },
+                }}
+              >
+                {educationalDegreeOptions.map((option) => (
+                <MenuItem key={option} value={option}>
+                {option}
+                </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
+            <TextField
+            sx={{ width: '90%' }}
+            disabled={disabled}
+            margin="dense"
+            variant="standard"
+            label="Specialization"
+            fullWidth
+            value={formData?.field3 || ''}
+            name="Specialization"
+            onChange={(e) => handleEducationFormChange(index, 'field3', e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12} sm={3} sx={{ marginTop: 1 }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              sx={{ width: '90%' }}
+              disabled={disabled}
+              disableFuture
+              label="Start Date"
+              inputFormat="YYYY-MM-DD"
+              value={formData?.field4}
+              onChange={(e) => handleChangeEducationStartDate(index, 'field4', e)}
+              renderInput={(params) => <TextField {...params} />}
+            />
+            </LocalizationProvider>
+          </Grid>
+          <Grid item xs={12} sm={3} sx={{ marginTop: 1 }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              sx={{ width: '90%' }}
+              disabled={disabled}
+              disableFuture
+              label="End Date"
+              inputFormat="YYYY-MM-DD"
+              value={formData?.field5}
+              onChange={(e) => handleChangeEducationEndDate(index, 'field5', e)}
+              renderInput={(params) => <TextField {...params} />}
+            />
+            </LocalizationProvider>
+          </Grid>
+        </Grid>
+        ))}
+        <Grid container spacing={2} sx={{ marginTop: 2 }}>
+          <Grid item>
+            <Button variant="contained" color="primary" onClick={handleEducationAddForm} disabled={disabled}>Add Education</Button>
+          </Grid>
+          {educationArray.length > 1 && (
+          <Grid item>
+            <Button variant="contained" color="primary" onClick={handleEducationRemoveForm} disabled={disabled}>Remove Education</Button>
+          </Grid>
+          )}
         </Grid>
       </Grid>
-      {/* </Card> */}
+
+      <Grid item xs={12}>
+        <Typography
+          variant="h5"
+          sx={{
+          marginBottom: '2%',
+          marginLeft: '12%',
+          marginTop: '2%',
+          backgroundColor: 'transparent !important'
+          }}
+        >
+        Attachment
+        </Typography>
+      </Grid>
+      <Grid container spacing={2} sx={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '60%' }}>
+        <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
+        <InputLabel sx={{ textAlign: 'left' }}>Cover Letter</InputLabel>
+        <Input
+          type="file"
+          sx={{ width: '90%' }}
+          disabled={disabled}
+          required
+          aria-describedby="my-helper-text"
+          id="standard-required"
+          label="Upload Resume"
+          variant="standard"
+          name="cover_letter"
+          onChange={handleCoverLetterFileChange}
+        />
+        {newFormData?.cover_letter && <p>Selected File: {newFormData?.cover_letter.name}</p>}
+        {/* <Typography>{extractFileName(newFormData?.cover_letter)}</Typography> */}
+      </Grid>
+      <Grid item xs={12} sm={6} sx={{ marginTop: 1 }}>
+        <InputLabel sx={{ textAlign: 'left' }}>Certificate</InputLabel>
+        <Input
+          type="file"
+          sx={{ width: '90%' }}
+          disabled={disabled}
+          required
+          aria-describedby="my-helper-text"
+          id="standard-required"
+          label="Upload Resume"
+          variant="standard"
+          name="certificate"
+          onChange={handleCertificateFileChange}
+        />
+        {newFormData?.certificate && <p>Selected File: {newFormData?.certificate.name}</p>}
+        {/* <Typography>{extractFileName(newFormData?.certificate)}</Typography> */}
+      </Grid>
+    </Grid>
+      </Grid>
+    {/* </Card> */}
       {isModalOpen && (
         <ResumeSelectorModal
           resumes={userresume}
@@ -2202,8 +2179,8 @@ function FillDetails({ disabled = false, userresume }) {
           onClose={() => setIsModalOpen(false)}
         />
       )}
-    </div>
 
+    </div>
   );
 }
 
