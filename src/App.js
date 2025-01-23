@@ -8,11 +8,15 @@ import Register from "./pages/Register"
 import NewcreateCandidate from './pages/NewcreateCandidate';
 import LandingPage from "./pages/LandingPage";
 import CandidateRegistrationForm from "./pages/CandidateRegistrationForm";
+import { Helmet } from "react-helmet";
 
 function App() {
   return (
     <div className="App">
       <Router>
+        <Helmet>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+        </Helmet>
         <Routes>
           <Route exact path="/login"
             element={<Login />}
@@ -32,6 +36,10 @@ function App() {
           </Route>
           <Route exact path="/"
             element={<LandingPage />}>
+            <Helmet>
+              <title>Home Page</title>
+              <meta name="description" content="Welcome to the homepage" />
+            </Helmet>
           </Route>
           <Route exact path="/jobs"
             element={<JobsPage />}>
