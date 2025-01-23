@@ -74,6 +74,38 @@ function SingleJobView() {
         }, 50); 
     };
 
+    useEffect(() => {
+        // Set dynamic title
+        document.title = `${data?.data.title} - ${data?.data.company_name}`;
+
+        // Set dynamic meta description
+        let metaDescription = document.querySelector('meta[name="description"]');
+        // if (!metaDescription) {
+            metaDescription = document.createElement('meta');
+            metaDescription.name = "description";
+            document.head.appendChild(metaDescription);
+        // }
+        metaDescription.content = data?.data.description;
+
+        // Set dynamic meta keywords
+        let metaKeywords = document.querySelector('meta[name="keywords"]');
+        // if (!metaKeywords) {
+            metaKeywords = document.createElement('meta');
+            metaKeywords.name = "keywords";
+            document.head.appendChild(metaKeywords);
+        // }
+        metaKeywords.content = `Job, ${data?.data.title}, ${data?.data.company_name}`;
+
+        // Cleanup function to remove meta tags if needed
+        return () => {
+            if (metaDescription) {
+                document.head.removeChild(metaDescription);
+            }
+            if (metaKeywords) {
+                document.head.removeChild(metaKeywords);
+            }
+        };
+    }, [data]); // Run effect when data changes
 
     return (
         <>
