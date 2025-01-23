@@ -78,7 +78,7 @@ function SingleJobView() {
     return (
         <>
             <Helmet>
-                <title>ok</title>
+                <title>{data?.data.title || 'Job Details'}</title>
             </Helmet>
             <ToastContainer />
             <Box sx={{ backgroundColor: "#ffffff", minHeight: "100vh", mt: 0, p: 0 }}>
