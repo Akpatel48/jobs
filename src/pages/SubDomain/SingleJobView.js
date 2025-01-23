@@ -76,7 +76,7 @@ function SingleJobView() {
 
     return (
         <HelmetProvider>
-            <Helmet>
+            {/* <Helmet>
                 <title>{data?.data.title || 'Job Details'}</title>
                 <meta name="description" content={data?.data.description || 'Job description not available'} />
                 <meta name="keywords" content="jobs, careers, hiring" />
@@ -85,6 +85,11 @@ function SingleJobView() {
                 <meta property="description" content={data?.data.description || 'Job description not available'} />
                 <meta property="url" content={`https://yourdomain.com/jobs/${data?.data.id}`} />
                 <meta property="type" content="website" />
+            </Helmet> */}
+            <Helmet>
+                <title>{`${company} - ${data?.data.title}`}</title>
+                <meta name="description" content="Job Description" />
+                <meta name="keywords" content="job, career, employment" />
             </Helmet>
             <ToastContainer />
             <Box sx={{ backgroundColor: "#ffffff", minHeight: "100vh", mt: 0, p: 0 }}>
