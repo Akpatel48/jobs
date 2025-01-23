@@ -21,6 +21,7 @@ import { useGetCareerSiteCompanyDataQuery } from '../../redux/services/settings/
 import Footer from '../../components/Footer';
 import DynamicFooter from '../../components/DynamicFooter';
 import BackgroundImageURL from "../../assets/images/BackgroundImageURL.jpeg"
+import { Helmet } from 'react-helmet';
 
 function SingleJobView() {
     const { id } = useParams()
@@ -76,6 +77,9 @@ function SingleJobView() {
 
     return (
         <>
+            <Helmet>
+                <title>ok</title>
+            </Helmet>
             <ToastContainer />
             <Box sx={{ backgroundColor: "#ffffff", minHeight: "100vh", mt: 0, p: 0 }}>
                 <IconButton 
