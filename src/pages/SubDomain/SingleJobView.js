@@ -81,10 +81,10 @@ function SingleJobView() {
                 <meta name="description" content={data?.data.description || 'Job description not available'} />
                 <meta name="keywords" content="jobs, careers, hiring" />
                 <link rel="canonical" href={`https://yourdomain.com/jobs/${data?.data.id}`} />
-                <meta property="og:title" content={data?.data.title || 'Job Details'} />
-                <meta property="og:description" content={data?.data.description || 'Job description not available'} />
-                <meta property="og:url" content={`https://yourdomain.com/jobs/${data?.data.id}`} />
-                <meta property="og:type" content="website" />
+                <meta property="title" content={data?.data.title || 'Job Details'} />
+                <meta property="description" content={data?.data.description || 'Job description not available'} />
+                <meta property="url" content={`https://yourdomain.com/jobs/${data?.data.id}`} />
+                <meta property="type" content="website" />
             </Helmet>
             <ToastContainer />
             <Box sx={{ backgroundColor: "#ffffff", minHeight: "100vh", mt: 0, p: 0 }}>
