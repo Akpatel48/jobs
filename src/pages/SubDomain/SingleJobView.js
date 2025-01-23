@@ -21,8 +21,7 @@ import { useGetCareerSiteCompanyDataQuery } from '../../redux/services/settings/
 import Footer from '../../components/Footer';
 import DynamicFooter from '../../components/DynamicFooter';
 import BackgroundImageURL from "../../assets/images/BackgroundImageURL.jpeg"
-import { Helmet } from 'react-helmet';
-import DocumentMeta from 'react-document-meta';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 function SingleJobView() {
     const { id } = useParams()
@@ -75,36 +74,18 @@ function SingleJobView() {
         }, 50);
     };
 
-    const meta = {
-        title: data?.data.title || 'Job Details',
-        description: data?.data.description || 'Job description not available',
-        canonical: `https://yourdomain.com/jobs/${data?.data.id}`,
-        meta: {
-            name: {
-                keywords: 'jobs, careers, hiring',
-            },
-            property: {
-                'og:title': data?.data.title || 'Job Details',
-                'og:description': data?.data.description || 'Job description not available',
-                'og:url': `https://yourdomain.com/jobs/${data?.data.id}`,
-                'og:type': 'website',
-            },
-        },
-    };
-
     return (
-        <>
-            {/* <Helmet>
+        <HelmetProvider>
+            <Helmet>
                 <title>{data?.data.title || 'Job Details'}</title>
-                {/* <meta name="description" content={data?.data.description || 'Job description not available'} /> 
-                {/* <meta name="keywords" content="jobs, careers, hiring" /> 
-                {/* <link rel="canonical" href={`https://jobs-delta-virid.vercel.app/jobs/Careers/6/demo`} />
+                <meta name="description" content={data?.data.description || 'Job description not available'} />
+                <meta name="keywords" content="jobs, careers, hiring" />
+                <link rel="canonical" href={`https://yourdomain.com/jobs/${data?.data.id}`} />
                 <meta property="og:title" content={data?.data.title || 'Job Details'} />
                 <meta property="og:description" content={data?.data.description || 'Job description not available'} />
-                {/* <meta property="og:url" content={`https://jobs-delta-virid.vercel.app/jobs/Careers/6/demo`} /> 
-                {/* <meta property="og:type" content="website" /> 
-            </Helmet> */}
-            <DocumentMeta {...meta} />
+                <meta property="og:url" content={`https://yourdomain.com/jobs/${data?.data.id}`} />
+                <meta property="og:type" content="website" />
+            </Helmet>
             <ToastContainer />
             <Box sx={{ backgroundColor: "#ffffff", minHeight: "100vh", mt: 0, p: 0 }}>
                 <IconButton
@@ -297,7 +278,7 @@ function SingleJobView() {
                 </Card>
             </Box>
             {isViewJobsClicked ? <Footer /> : <DynamicFooter companyInfo={companyInfo} />}
-        </>
+        </HelmetProvider>
     )
 }
 
