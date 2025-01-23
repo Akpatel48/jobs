@@ -21,7 +21,8 @@ import { useGetCareerSiteCompanyDataQuery } from '../../redux/services/settings/
 import Footer from '../../components/Footer';
 import DynamicFooter from '../../components/DynamicFooter';
 import BackgroundImageURL from "../../assets/images/BackgroundImageURL.jpeg"
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { Helmet } from 'react-helmet';
+
 
 function SingleJobView() {
     const { id } = useParams()
@@ -75,7 +76,8 @@ function SingleJobView() {
     };
 
     return (
-        <HelmetProvider>
+        <>
+        // <HelmetProvider>
             {/* <Helmet>
                 <title>{data?.data.title || 'Job Details'}</title>
                 <meta name="description" content={data?.data.description || 'Job description not available'} />
@@ -87,7 +89,7 @@ function SingleJobView() {
                 <meta property="type" content="website" />
             </Helmet> */}
             <Helmet>
-                <title>{`${company} - ${data?.data.title}`}</title>
+                <meta property="og:title" content={`${company} - ${data?.data.title}`} />
                 <meta property="og:description" content="Job Description" />
                 <meta property="og:keywords" content="job, career, employment" />
             </Helmet>
@@ -283,7 +285,8 @@ function SingleJobView() {
                 </Card>
             </Box>
             {isViewJobsClicked ? <Footer /> : <DynamicFooter companyInfo={companyInfo} />}
-        </HelmetProvider>
+        // </HelmetProvider>
+        </>
     )
 }
 
