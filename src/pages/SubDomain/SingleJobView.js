@@ -78,9 +78,9 @@ function SingleJobView() {
     return (
         <>
             <Helmet>
-                <title>{data?.data.title} - {data?.data.company_name}</title>
-                <meta name="description" content={data?.data.description} />
-                <meta name="keywords" content={`Job, ${data?.data.title}, ${data?.data.company_name}`} />
+                <title>My title</title>
+                {/* <meta name="description" content={data?.data.description} /> */}
+                {/* <meta name="keywords" content={`Job, ${data?.data.title}, ${data?.data.company_name}`} /> */}
             </Helmet>
             <ToastContainer />
             <Box sx={{ backgroundColor: "#ffffff", minHeight: "100vh", mt: 0, p: 0 }}>
