@@ -22,6 +22,7 @@ import Footer from '../../components/Footer';
 import DynamicFooter from '../../components/DynamicFooter';
 import BackgroundImageURL from "../../assets/images/BackgroundImageURL.jpeg"
 import { Helmet } from 'react-helmet';
+import DocumentMeta from 'react-document-meta';
 
 function SingleJobView() {
     const { id } = useParams()
@@ -31,15 +32,15 @@ function SingleJobView() {
     const companyId = location.state?.companyId;
     const isViewJobsClicked = location.state?.isViewJobsClicked || false;
     const companyInfo = location.state?.companyInfo || false;
-    
+
     localStorage.setItem("jobId", id)
-    const { data, isLoading, refetch } = useGetJobDetailsCareerQuery(id);    
+    const { data, isLoading, refetch } = useGetJobDetailsCareerQuery(id);
     const { data: addressData, isLoading: addressIsLoading, refetch: addressRefetch } = useGetAddresseDetailsQuery(data?.data.location);
     const { data: fetchedCareerSiteCompanyData, refetch: CompanyDatarefetch } = useGetCareerSiteCompanyDataQuery(companyId);
     const careerSiteCompanyData = companyId ? fetchedCareerSiteCompanyData : location.state?.careerSiteCompanyData;
     const [jobType, setJobType] = useState()
-    const navigate = useNavigate()    
-    
+    const navigate = useNavigate()
+
     const mappingEducation = {
         1: "High School",
         2: "Junior College",
@@ -66,40 +67,57 @@ function SingleJobView() {
         // console.log(data?.assesment)
         localStorage.setItem("assesment", data?.data.assesment)
     }, [data])
-    
+
     const handleCopyLink = () => {
         navigator.clipboard.writeText(window.location.href);
         setTimeout(() => {
             toast.success("Link copied");
-        }, 50); 
+        }, 50);
     };
 
+    const meta = {
+        title: data?.data.title || 'Job Details',
+        description: data?.data.description || 'Job description not available',
+        canonical: `https://yourdomain.com/jobs/${data?.data.id}`,
+        meta: {
+            name: {
+                keywords: 'jobs, careers, hiring',
+            },
+            property: {
+                'og:title': data?.data.title || 'Job Details',
+                'og:description': data?.data.description || 'Job description not available',
+                'og:url': `https://yourdomain.com/jobs/${data?.data.id}`,
+                'og:type': 'website',
+            },
+        },
+    };
 
     return (
         <>
-            <Helmet>
+            {/* <Helmet>
                 <title>{data?.data.title || 'Job Details'}</title>
-                <meta name="description" content={data?.data.description || 'Job description not available'} />
-                <meta name="keywords" content="jobs, careers, hiring" />
-                {/* <link rel="canonical" href={`https://jobs-delta-virid.vercel.app/jobs/Careers/6/demo`} /> */}
+                {/* <meta name="description" content={data?.data.description || 'Job description not available'} /> 
+                {/* <meta name="keywords" content="jobs, careers, hiring" /> 
+                {/* <link rel="canonical" href={`https://jobs-delta-virid.vercel.app/jobs/Careers/6/demo`} />
                 <meta property="og:title" content={data?.data.title || 'Job Details'} />
                 <meta property="og:description" content={data?.data.description || 'Job description not available'} />
-                <meta property="og:url" content={`https://jobs-delta-virid.vercel.app/jobs/Careers/6/demo`} />
-                <meta property="og:type" content="website" />
-            </Helmet>
+                {/* <meta property="og:url" content={`https://jobs-delta-virid.vercel.app/jobs/Careers/6/demo`} /> 
+                {/* <meta property="og:type" content="website" /> 
+            </Helmet> */}
+            <DocumentMeta {...meta} />
             <ToastContainer />
             <Box sx={{ backgroundColor: "#ffffff", minHeight: "100vh", mt: 0, p: 0 }}>
-                <IconButton 
-                            onClick={() => navigate(-1)} 
-                            sx={{ 
-                                position: 'absolute', 
-                                top: 16, // Adjusted for better visibility
-                                left: 16, // Adjusted for better visibility
-                                zIndex: 3, // Ensure it appears above other elements
-                                color: '#fff' // Ensure the icon is visible against the background
-                            }}
-                    >
-                        <ArrowBackIcon />
+                <IconButton
+                    onClick={() => navigate(-1)}
+                    sx={{
+                        position: 'absolute',
+                        top: 16, // Adjusted for better visibility
+                        left: 16, // Adjusted for better visibility
+                        zIndex: 3, // Ensure it appears above other elements
+                        color: '#fff' // Ensure the icon is visible against the background
+                    }}
+                >
+                    <ArrowBackIcon />
                 </IconButton>
                 <Box
                     sx={{
@@ -128,7 +146,7 @@ function SingleJobView() {
                     }}
                 >
                     <Typography variant="h5" gutterBottom>
-                        { data?.data.company_name } | {data?.data.type}
+                        {data?.data.company_name} | {data?.data.type}
                     </Typography>
                     <Typography variant="h3">
                         {data?.data.title}
@@ -140,16 +158,16 @@ function SingleJobView() {
                         Posted on {data?.data.posted_date}
                     </Typography>
                     <Box sx={{ mt: 2 }}>
-                        <Button 
-                            variant="contained" 
-                            color="primary" 
+                        <Button
+                            variant="contained"
+                            color="primary"
                             sx={{ mr: 1 }}
                             onClick={() => navigate(`/JobApplication/${data.data.webform}`, { state: { job_name: data?.data.title } })}
                         >
                             I'm interested
                         </Button>
-                        <Button 
-                            variant="outlined" 
+                        <Button
+                            variant="outlined"
                             sx={{
                                 color: 'white',
                                 borderColor: 'white',
@@ -188,9 +206,9 @@ function SingleJobView() {
                             <Telegram sx={{ color: 'white' }} />
                         </IconButton>
                         <IconButton
-                            onClick= {handleCopyLink}
+                            onClick={handleCopyLink}
                         >
-                            <Link sx={{ color: 'white' }}/>
+                            <Link sx={{ color: 'white' }} />
                         </IconButton>
                     </Box>
 
@@ -199,9 +217,9 @@ function SingleJobView() {
                     <Typography
                         variant="body1"
                         onClick={() => navigate(`/jobs/${data?.data.company}/${encodeURIComponent(data?.data.company_name)}`, { state: { isViewJobsClicked } })} // Redirect to Job Listing
-                        sx={{ 
-                            color: 'primary.main', 
-                            textDecoration: 'none', 
+                        sx={{
+                            color: 'primary.main',
+                            textDecoration: 'none',
                             '&:hover': {
                                 textDecoration: 'underline', // Underline on hover
                                 cursor: 'pointer' // Change cursor to pointer
@@ -213,7 +231,7 @@ function SingleJobView() {
                     <IconButton sx={{ mx: 1, p: 0.5 }}>
                         <ArrowForwardIosIcon sx={{ color: '#333', fontSize: '16px' }} />
                     </IconButton>
-                    <Typography variant="body1" sx={{  }}>
+                    <Typography variant="body1" sx={{}}>
                         Job details
                     </Typography>
                 </Box>
@@ -236,28 +254,28 @@ function SingleJobView() {
                                 </Typography>
                                 <Typography sx={{ mb: 0.5, color: '#333', fontWeight: 'bold' }}>Date Opened:</Typography>
                                 <Typography sx={{ mb: 1, color: '#333' }}>{data?.data.created.split('T')[0]}</Typography>
-                                
+
                                 <Typography sx={{ mb: 0.5, color: '#333', fontWeight: 'bold' }}>Job Type:</Typography>
                                 <Typography sx={{ mb: 1, color: '#333' }}>{data?.data.type}</Typography>
-                                
+
                                 {/* <Typography sx={{ mb: 0.5, color: '#333', fontWeight: 'bold' }}>Industry:</Typography>
                                 <Typography sx={{ mb: 1, color: '#333' }}>{data?.data.industry}</Typography> */}
-                                
+
                                 <Typography sx={{ mb: 0.5, color: '#333', fontWeight: 'bold' }}>Work Experience:</Typography>
                                 <Typography sx={{ mb: 1, color: '#333' }}>{data?.data.exp_min}-{data?.data.exp_max} Years</Typography>
-                                
+
                                 <Typography sx={{ mb: 0.5, color: '#333', fontWeight: 'bold' }}>City:</Typography>
                                 <Typography sx={{ mb: 1, color: '#333' }}>{addressData?.data.city_name}</Typography>
-                                
+
                                 <Typography sx={{ mb: 0.5, color: '#333', fontWeight: 'bold' }}>State/Province:</Typography>
                                 <Typography sx={{ mb: 1, color: '#333' }}>{addressData?.data.state_name}</Typography>
-                                
+
                                 <Typography sx={{ mb: 0.5, color: '#333', fontWeight: 'bold' }}>Country:</Typography>
                                 <Typography sx={{ mb: 1, color: '#333' }}>{addressData?.data.country_name}</Typography>
-                                
+
                                 <Typography sx={{ mb: 0.5, color: '#333', fontWeight: 'bold' }}>Zip/Postal Code:</Typography>
                                 <Typography sx={{ mb: 1, color: '#333' }}>{addressData?.data.pincode}</Typography>
-                                
+
                                 <Typography sx={{ mb: 0.5, color: '#333', fontWeight: 'bold' }}>Number of Positions:</Typography>
                                 <Typography sx={{ mb: 1, color: '#333' }}>{data?.data.vacancies}</Typography>
                             </Grid>
@@ -271,7 +289,7 @@ function SingleJobView() {
                                 width: "150px"
                             }}
                             variant="contained"
-                            onClick={() => navigate(`/JobApplication/${data.data.webform}`,  { state: { job_name: data?.data.title } })}
+                            onClick={() => navigate(`/JobApplication/${data.data.webform}`, { state: { job_name: data?.data.title } })}
                         >
                             I'm Interested
                         </Button>

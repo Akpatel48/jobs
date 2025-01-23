@@ -26,6 +26,7 @@
     "primereact": "^10.2.1",
     "react": "^18.2.0",
     "react-countup": "^6.5.3",
+    "react-document-meta": "^3.0.0-beta.2",
     "react-dom": "^18.2.0",
     "react-dropzone-uploader": "^2.11.0",
     "react-helmet": "^6.1.0",
