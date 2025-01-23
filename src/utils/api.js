@@ -1,5 +1,5 @@
-const baseUrl = 'http://localhost:8000/';
-// const baseUrl = 'https://api.edjobster.com/';
+// const baseUrl = 'http://localhost:8000/';
+const baseUrl = 'https://api.edjobster.com/';
 // const baseUrl = 'https://staging-api.edjobster.com/';
 
 const   apiUrl = {
