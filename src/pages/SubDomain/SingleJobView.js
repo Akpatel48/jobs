@@ -79,6 +79,8 @@ function SingleJobView() {
         <>
             <Helmet>
                 <title>{data?.data.title || 'Job Details'}</title>
+                <meta name="description" content={data?.data.description || 'Job description not available'} />
+                <meta name="keywords" content="jobs, careers, hiring" />
             </Helmet>
             <ToastContainer />
             <Box sx={{ backgroundColor: "#ffffff", minHeight: "100vh", mt: 0, p: 0 }}>
