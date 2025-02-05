@@ -115,7 +115,7 @@ const Navbar = () => {
   };
 
   const handleRedirect = () => {
-    window.location.href = "https://staging-cv-app.edjobster.com/"; // Redirect function
+    window.location.href = "https://cvtuner.edjobster.com/"; // Redirect function
 };
 
   const menuItems = [
@@ -180,17 +180,17 @@ const Navbar = () => {
           key="registrationform"
           aria-label="Registration"
           role="menuitem"
-          onClick={() => window.location.href = "https://staging-cv-app.edjobster.com/"} // Redirect on click
+          onClick={() => window.location.href = "https://cvtuner.edjobster.com/"} // Redirect on click
           component="div" // Use 'div' to prevent NavLink behavior
       >
           Registration
       </NavButton>
       <NavButton
-          key="about"
-          aria-label="About Us"
+          key="registrationform"
+          aria-label="Registration"
           role="menuitem"
-          component={NavLink}
-          to="#"
+          onClick={() => window.location.href = "https://edjobster.com/edjobster-hiring/"} // Redirect on click
+          component="div" // Use 'div' to prevent NavLink behavior
       >
           About Us
       </NavButton>
@@ -311,7 +311,7 @@ const Navbar = () => {
             <ListItem
               button
               key="registrationform"
-              onClick={() => window.location.href = "https://staging-cv-app.edjobster.com/"} // Redirect on click
+              onClick={() => window.location.href = "https://cvtuner.edjobster.com/"} // Redirect on click
             >
               <ListItemText primary="Registration" sx={{ color: '#000000' }} />
             </ListItem>

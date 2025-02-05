@@ -461,7 +461,7 @@ function FillDetails({ disabled = false, userresume, resume, setResume }) {
     // const savedResume = savedResumes.find(resume => resume.id === resumeId);
     // console.log("resume_Id", resumeId);
     const selectedResume = userresume.find(resume => resume.id === resumeId);
-    // console.log("resumeId", selectedResume );
+    console.log("resumeId", selectedResume );
     setNewFormData({})
 
     if (!selectedResume) return;
@@ -540,7 +540,7 @@ function FillDetails({ disabled = false, userresume, resume, setResume }) {
         state: '',
         city: '',
         pincode: selectedResume.postalCode || '',
-        skills: '',
+        skills: selectedResume.skills|| "",
         summary: selectedResume.professionalSummary || '',
         resume_data: JSON.stringify(selectedResume) || "",
 
@@ -626,6 +626,8 @@ function FillDetails({ disabled = false, userresume, resume, setResume }) {
           }
           // for Skills
           const extractedSkills = data.SegregatedSkill.map(skillObj => skillObj.Skill);
+          console.log("extractedSkills",extractedSkills);
+          
           
           const newArray = data.SegregatedExperience.map((originalObject) => {
             let formattedStartDate = '';
@@ -718,7 +720,7 @@ function FillDetails({ disabled = false, userresume, resume, setResume }) {
             state: '',
             city: '',
             pincode: data.Address[0].ZipCode || '',
-            skills: '',
+            skills: extractedSkills || "",
             summary:data.Summary || ''
           });
           // Handle the response from the server
@@ -813,14 +815,16 @@ function FillDetails({ disabled = false, userresume, resume, setResume }) {
         ...prev,
         city: selectedCity ? selectedCity.id : '',
       }));
-    }else if (name === 'skills') {
-      // Ensure value is always an array of IDs
-      const skillIds = Array.isArray(value) ? value : [value];
-      setNewFormData((prev) => ({
-        ...prev,
-        skills: skillIds
-      }));
-    } else if (name === 'subjects') {
+    }
+    // else if (name === 'skills') {
+    //   // Ensure value is always an array of IDs
+    //   const skillIds = Array.isArray(value) ? value : [value];
+    //   setNewFormData((prev) => ({
+    //     ...prev,
+    //     skills: skillIds
+    //   }));
+    // }
+     else if (name === 'subjects') {
       // Handle subjects similar to skills - just store the IDs
       setNewFormData((prev) => ({
         ...prev,
@@ -844,7 +848,7 @@ function FillDetails({ disabled = false, userresume, resume, setResume }) {
   //   formData.append('middle_name', newFormData.middle_name);
   //   formData.append('last_name', newFormData.last_name);
   //   formData.append('mobile', newFormData.mobile);
-  //   formData.append('alternate_mobile', newFormData.alternate_mobile);
+  //   formData.append('alternate_mobile', newFormData.alternate_mobfile);
   //   formData.append('email', newFormData.email);
   //   formData.append('alternate_email', newFormData.alternate_email);
   //   formData.append('gender', newFormData.gender);
@@ -1884,17 +1888,17 @@ function FillDetails({ disabled = false, userresume, resume, setResume }) {
             /> */}
             <AntSelect
               mode="tags"
-              style={{ width: '90%' }}
+              style={{ width: '90%',margin: "0px",padding: "0px" }}
               value={newFormData?.skills || []}
               onChange={(selectedIds) => handleChangenewFormData('skills', selectedIds)}
               tokenSeparators={[',']}
               showSearch
-              filterOption={(input, option) =>
-                option?.label.toLowerCase().includes(input.toLowerCase())
-              }
+              // filterOption={(input, option) =>
+              //   option?.label.toLowerCase().includes(input.toLowerCase())
+              // }
               options={skillData?.data?.map(skill => ({
                 label: skill.name,
-                value: skill.id
+                value: skill.name
               })) || []}
               disabled={disabled}
             />

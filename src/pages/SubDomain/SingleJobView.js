@@ -40,7 +40,8 @@ function SingleJobView() {
     const careerSiteCompanyData = companyId ? fetchedCareerSiteCompanyData : location.state?.careerSiteCompanyData;
     const [jobType, setJobType] = useState()
     const navigate = useNavigate()
-
+    console.log("data",data);
+    
     const mappingEducation = {
         1: "High School",
         2: "Junior College",
@@ -77,7 +78,7 @@ function SingleJobView() {
 
     return (
         <>
-        // <HelmetProvider>
+         {/* <HelmetProvider> */}
             {/* <Helmet>
                 <title>{data?.data.title || 'Job Details'}</title>
                 <meta name="description" content={data?.data.description || 'Job description not available'} />
@@ -88,11 +89,11 @@ function SingleJobView() {
                 <meta property="url" content={`https://yourdomain.com/jobs/${data?.data.id}`} />
                 <meta property="type" content="website" />
             </Helmet> */}
-            <Helmet>
+            {/* <Helmet>
                 <meta property="og:title" content={`${company} - ${data?.data.title}`} />
                 <meta property="og:description" content="Job Description" />
                 <meta property="og:keywords" content="job, career, employment" />
-            </Helmet>
+            </Helmet> */}
             <ToastContainer />
             <Box sx={{ backgroundColor: "#ffffff", minHeight: "100vh", mt: 0, p: 0 }}>
                 <IconButton
@@ -150,7 +151,7 @@ function SingleJobView() {
                             variant="contained"
                             color="primary"
                             sx={{ mr: 1 }}
-                            onClick={() => navigate(`/JobApplication/${data.data.webform}`, { state: { job_name: data?.data.title } })}
+                            onClick={() => navigate(`/JobApplication/${data.data.webform}`, { state: { job_name: data?.data.title, email:data?.data?.company?.email } })}
                         >
                             I'm interested
                         </Button>
@@ -241,7 +242,9 @@ function SingleJobView() {
                                     Job Information
                                 </Typography>
                                 <Typography sx={{ mb: 0.5, color: '#333', fontWeight: 'bold' }}>Date Opened:</Typography>
-                                <Typography sx={{ mb: 1, color: '#333' }}>{data?.data.created.split('T')[0]}</Typography>
+                                <Typography sx={{ mb: 1, color: '#333' }}>
+                                    {data?.data?.created ? data.data.created.split('T')[0] : 'Not available'}
+                                </Typography>
 
                                 <Typography sx={{ mb: 0.5, color: '#333', fontWeight: 'bold' }}>Job Type:</Typography>
                                 <Typography sx={{ mb: 1, color: '#333' }}>{data?.data.type}</Typography>
@@ -277,15 +280,21 @@ function SingleJobView() {
                                 width: "150px"
                             }}
                             variant="contained"
-                            onClick={() => navigate(`/JobApplication/${data.data.webform}`, { state: { job_name: data?.data.title } })}
+                            onClick={() => navigate(`/JobApplication/${data.data.webform}`, { state: { job_name: data?.data.title ,companyemail:data?.data?.company?.email } })}
                         >
-                            I'm Interested
+                            I'm Interested  
                         </Button>
                     </Box>
+                    {/* <Typography sx={{ textAlign: 'center', mt: 1, color: '#666' }}>
+                        If you have any queries about the job or are unable to apply, please send your CV to {companyInfo.email}
+                    </Typography> */}
+                     <Typography sx={{ textAlign: 'center', mt: 1, color: '#666' }}>
+                        If you have any queries about the job or are unable to apply, please send your CV to <a href={`mailto:${data?.data?.company?.email}`}>{data?.data?.company?.email}</a>
+                    </Typography>
                 </Card>
             </Box>
             {isViewJobsClicked ? <Footer /> : <DynamicFooter companyInfo={companyInfo} />}
-        // </HelmetProvider>
+        {/* // </HelmetProvider> */}
         </>
     )
 }

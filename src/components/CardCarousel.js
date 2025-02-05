@@ -184,13 +184,13 @@ return (
                 sx={{
                     color: "#1976d2",
                     borderColor: "#1976d2",
-                    borderRadius: "25px", // Add border radius
+                    borderRadius: "25px",
                     "&:hover": {
                         borderColor: "#1976d2",
-                        backgroundColor: "rgba(25, 118, 210, 0.1)" // Add hover background color
+                        backgroundColor: "rgba(25, 118, 210, 0.1)"
                     }
                 }}
-                // onClick={() => navigate('/all-companies')}
+                onClick={() => navigate('/all-companies')}
             >
                 View all companies
             </Button>

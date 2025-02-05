@@ -8,6 +8,7 @@ import Register from "./pages/Register"
 import NewcreateCandidate from './pages/NewcreateCandidate';
 import LandingPage from "./pages/LandingPage";
 import CandidateRegistrationForm from "./pages/CandidateRegistrationForm";
+import AllCompanies from './pages/AllCompanies';
 
 function App() {
   return (
@@ -45,6 +46,8 @@ function App() {
           <Route exact path="/JobApplication/:webform"
             element={<JobApplication />}>
           </Route>
+          <Route path="/all-companies" 
+          element={<AllCompanies/>} />
         </Routes>
       </Router>
     </div>

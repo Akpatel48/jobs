@@ -31,7 +31,7 @@ import FormLabel from "@mui/material/FormLabel";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { showToast } from "../../../utils/toast";
-import { useAddCandidateMutation} from '../../../redux/services/candidate/CandidateServices';
+import { useAddCandidateMutation } from '../../../redux/services/candidate/CandidateServices';
 
 
 function CompleteAssesment({ disabled = false, assesmentId }) {
@@ -126,21 +126,34 @@ function CompleteAssesment({ disabled = false, assesmentId }) {
             item.type === "T" ? (
               <Grid key={`text-${index}`} item xs={12} style={{ margin: 15 }}>
                 <Grid display="flex" item xs={12}>
+                  <Grid item xs={11}>
+                    <Typography variant="body1" gutterBottom >
+                      Question {index + 1} : Text Question
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={1}>
+                    {/* <Button style={{ color: 'red' }} onClick={() => onCloseQuestionDeleteHandler(index)}> */}
+                    {/* &#10005; */}
+                    {/* </Button> */}
+                  </Grid>
+                </Grid>
+                {/* <Grid display="flex" item xs={12}>
                   <Grid item xs={11} style={{ margin: 15 }}>
-                    <Typography variant="h5" gutterBottom>
+                    <Typography variant="h6" gutterBottom>
                       Question {index + 1} : Text Question
                     </Typography>
                   </Grid>
                   <Grid item xs={1}>
                     {/* <Button style={{ color: 'red' }} onClick={() => onCloseQuestionDeleteHandler(index)}> */}
                     {/* &#10005;
-                        </Button> */}
+                        </Button> 
                   </Grid>
-                </Grid>
+                </Grid> */}
                 <Grid item xs={11}>
                   <TextField
                     required
-                    disabled
+                    // disabled
+                    // readonly
                     margin="dense"
                     variant="standard"
                     placeholder="Question"
@@ -149,6 +162,18 @@ function CompleteAssesment({ disabled = false, assesmentId }) {
                     value={item.question}
                     // onChange={(e) => onAssesmentQuestionNameInputChangeHandler(e, index)}
                     label="Question"
+                    InputProps={{
+                      style: { fontWeight: 'bold' },
+                      readOnly: true,
+                    }}
+                    // slotProps={{
+                    //   input: {
+                    //     readOnly: true,
+                    //   },
+                    // }}
+                    // variant="h5"
+                    fontWeight="bold"
+                  // style={{fontWeight : "30px"}}
                   />
                 </Grid>
 
@@ -206,7 +231,7 @@ function CompleteAssesment({ disabled = false, assesmentId }) {
                       <Grid item xs={12} style={{ margin: 15 }}>
                         <Grid display="flex" item xs={12}>
                           <Grid item xs={11}>
-                            <Typography variant="h6" gutterBottom>
+                            <Typography variant="h6" gutterBottom >
                               Question {index + 1} : Multiple Choice Question
                             </Typography>
                           </Grid>
@@ -219,7 +244,7 @@ function CompleteAssesment({ disabled = false, assesmentId }) {
                         <Grid item xs={12}>
                           <TextField
                             required
-                            disabled
+                            // disabled
                             margin="dense"
                             variant="standard"
                             placeholder="Question"
@@ -228,6 +253,10 @@ function CompleteAssesment({ disabled = false, assesmentId }) {
                             value={item.question}
                             // onChange={(e) => onAssesmentQuestionNameInputChangeHandler(e, index)}
                             label="Question"
+                            InputProps={{
+                              style: { fontWeight: 'bold' },
+                              readOnly: true,
+                            }}
                           />
                         </Grid>
                         {/* <TextField
@@ -341,7 +370,7 @@ function CompleteAssesment({ disabled = false, assesmentId }) {
                       <Grid item xs={12} style={{ margin: 15 }}>
                         <Grid display="flex" item xs={12}>
                           <Grid item xs={11}>
-                            <Typography variant="h6" gutterBottom>
+                            <Typography variant="h6" gutterBottom >
                               Question {index + 1} : Multiple Select Question
                             </Typography>
                           </Grid>
@@ -354,7 +383,7 @@ function CompleteAssesment({ disabled = false, assesmentId }) {
                         <Grid item xs={12}>
                           <TextField
                             required
-                            disabled
+                            // disabled
                             margin="dense"
                             variant="standard"
                             placeholder="Question"
@@ -363,6 +392,10 @@ function CompleteAssesment({ disabled = false, assesmentId }) {
                             value={item.question}
                             // onChange={(e) => onAssesmentQuestionNameInputChangeHandler(e, index)}
                             label="Question"
+                            InputProps={{
+                              style: { fontWeight: 'bold' },
+                              readOnly: true,
+                            }}
                           />
                         </Grid>
                         {/* <TextField

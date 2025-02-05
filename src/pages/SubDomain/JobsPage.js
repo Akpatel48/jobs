@@ -19,6 +19,9 @@ function JobsPage() {
     const [jobType, setJobType] = useState('');
     const [salaryRange, setSalaryRange] = useState('');
     const [isViewJobsClicked, setIsViewJobsClicked] = useState(true);
+    const [displayedJobs, setDisplayedJobs] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const jobsPerPage = 10;
 
     const { data: jobs = [], refetch , error, isLoading } = useGetFilterJobsQuery({
         title: searchTerm,
@@ -41,6 +44,19 @@ function JobsPage() {
     useEffect(() => {
         refetch();
     },[])
+
+    useEffect(() => {
+        if (jobs.length > 0) {
+            setDisplayedJobs(jobs.slice(0, jobsPerPage));
+        }
+    }, [jobs]);
+
+    const handleLoadMore = () => {
+        const nextPage = currentPage + 1;
+        const endIndex = nextPage * jobsPerPage;
+        setDisplayedJobs(jobs.slice(0, endIndex));
+        setCurrentPage(nextPage);
+    };
 
     const handleViewOpeningsClick = () => {
         if (applyNowRef.current) {
@@ -126,7 +142,7 @@ function JobsPage() {
                         </Typography>
                         <Grid container spacing={2} direction="column" justifyContent="center" alignItems="center" sx={{ px: 2 }}>
                             {jobs.length > 0 ? (
-                                jobs.map((job, index) => (
+                                displayedJobs.map((job, index) => (
                                     <Grid item xs={12} sm={12} md={10} key={job.id}>
                                         <Card
                                             variant="outlined"
@@ -147,8 +163,8 @@ function JobsPage() {
                                         >
                                             <Box
                                                 component="img"
-                                                src={`${baseUrl}${job.company_logo.slice(1)}`}
-                                                alt={`${job.company_name} logo`}
+                                                src={job?.company_logo ? `${baseUrl}${job.company_logo.slice(1)}` : '/path/to/default-logo.png'}
+                                                alt={`${job?.company_name} logo`}
                                                 sx={{
                                                     position: 'absolute',
                                                     top: 10,
@@ -200,9 +216,15 @@ function JobsPage() {
                                 </Grid>
                             )}
                         </Grid>
-                        <Button variant="outlined" sx={{ mt: 4, borderRadius: '20px' }}>
-                            10 MORE
-                        </Button>
+                        {jobs.length > displayedJobs.length && (
+                            <Button 
+                                variant="outlined" 
+                                sx={{ mt: 4, borderRadius: '20px' }}
+                                onClick={handleLoadMore}
+                            >
+                                10 MORE
+                            </Button>
+                        )}
                     </Box>
                 </Grid>
             </Grid>

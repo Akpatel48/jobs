@@ -31,7 +31,9 @@ import {
     ExitToApp as ExitToAppIcon
   } from "@mui/icons-material";
 import edjobster09 from "../assets/images/edjobster-09.png"
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
+
+
 
 
 // Define styled components
@@ -113,10 +115,15 @@ const DynamicNavbar = ({companyInfo}) => {
       }
     }
   };
+  const handleRedirect = () => {
+    window.location.href = "https://cvtuner.edjobster.com/"; // Redirect function
+};
 
   const menuItems = [
-    { text: "Registration", id: "foremployer" },
-    { text: "About Us", id: "about" }
+    // { text: "Registration", id: "foremployer" },
+    { text: "Registration", id: "registrationform", to: " ", onClick: handleRedirect  },
+
+    // { text: "About Us", id: "about" }
   ];
 
   const renderMenu = (
@@ -150,22 +157,39 @@ const DynamicNavbar = ({companyInfo}) => {
     </Menu>
   );
 
-  const navigationContent = (
-    <>
-      {menuItems.map((item) => (
-        <NavButton
-            key={item.id}
-            aria-label={item.text}
-            role="menuitem"
-            component={NavLink} // Use NavLink for routing
-            to={item.to || "#"} // Use 'to' property if available
-        >
-          {item.text}
-        </NavButton>
-      ))}
-    </>
-  );
-
+  // const navigationContent = (
+  //   <>
+  //     <NavButton
+  //         key="registrationform"
+  //         aria-label="Registration"
+  //         role="menuitem"
+  //         onClick={() => window.location.href = "https://cvtuner.edjobster.com/"} // Redirect on click
+  //         component="div" // Use 'div' to prevent NavLink behavior
+  //     >
+  //         Registration
+  //     </NavButton>
+  //     <NavButton
+  //         key="registrationform"
+  //         aria-label="Registration"
+  //         role="menuitem"
+  //         onClick={() => window.location.href = "https://cvtuner.edjobster.com/"} // Redirect on click
+  //         component="div" // Use 'div' to prevent NavLink behavior
+  //     >
+  //         About Us
+  //     </NavButton>
+  //     <NavButton
+  //         key="about"
+  //         aria-label="About Us"
+  //         role="menuitem"
+  //         component={NavLink}
+  //         to="#"
+  //     >
+  //         About Us
+  //     </NavButton>
+  //   </>
+  // );
+  const { id, name } = useParams()
+  console.log(id,name);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" sx={{ backgroundColor: "#ffffff" }}>
@@ -184,7 +208,8 @@ const DynamicNavbar = ({companyInfo}) => {
                   color: "#000000"
                 }}
               >
-                <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+                {/* <Link to={`https://jobs.edjobster.com/jobs/${id}/${name}`} style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}> */}
+                <Link to={`http://localhost:3000/jobs/${id}/${name}`} style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
                   <img
                     src={companyInfo.logo}
                     alt=""
@@ -200,11 +225,11 @@ const DynamicNavbar = ({companyInfo}) => {
               </Typography>
             </Box>
 
-            {!isMobile && (
+            {/* {!isMobile && (
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 {navigationContent}
               </Box>
-            )}
+            )} */}
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
               {/* <Search>
@@ -245,7 +270,7 @@ const DynamicNavbar = ({companyInfo}) => {
                 </IconButton>
               </Tooltip> */}
 
-              {isMobile && (
+              {/* {isMobile && (
                 <IconButton
                     sx={{ color: "#000000", ml: 1 }}
                     color="inherit"
@@ -255,7 +280,7 @@ const DynamicNavbar = ({companyInfo}) => {
                 >
                   <MenuIcon />
                 </IconButton>
-              )}
+              )} */}
             </Box>
           </StyledToolbar>
         </Container>
@@ -272,11 +297,16 @@ const DynamicNavbar = ({companyInfo}) => {
           onClick={handleMobileMenuToggle}
         >
           <List>
-            {menuItems.map((item) => (
-              <ListItem button key={item.id}>
-                <ListItemText primary={item.text} />
-              </ListItem>
-            ))}
+          <ListItem
+              button
+              key="registrationform"
+              onClick={() => window.location.href = "https://cvtuner.edjobster.com/"} // Redirect on click
+            >
+              <ListItemText primary="Registration" sx={{ color: '#000000' }} />
+            </ListItem>
+            {/* <ListItem button key="about" component={NavLink} to="#">
+              <ListItemText primary="About Us" />
+            </ListItem> */}
           </List>
         </Box>
       </Drawer>

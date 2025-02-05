@@ -61,8 +61,8 @@ const Footer = () => {
   const navigationLinks = [
     { name: "Home", url: "/" },
     { name: "Jobs", url: "/jobs" },
-    { name: "Registration", url: "/registrationform" },
-    { name: "About Us", url: "/about" },
+    { name: "Registration", url: "https://cvtuner.edjobster.com/" },
+    { name: "About Us", url: "https://edjobster.com/edjobster-hiring/" },
   ];
 
   return (

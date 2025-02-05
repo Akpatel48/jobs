@@ -72,7 +72,7 @@ function CareerSiteDescription() {
     const [filteredJobs, setFilteredJobs] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchInput, setSearchInput] = useState('');
-    // const itemsPerPage = 8;    
+    const [displayedJobCount, setDisplayedJobCount] = useState(9);
     
     useEffect(() => {
         refetch()
@@ -186,9 +186,17 @@ function CareerSiteDescription() {
     //     job.title.toLowerCase().includes(searchInput.toLowerCase())
     // )
 
-    const filteredCurrentItems = (filteredJobs ?? []).filter(job =>
+    const handleLoadMore = () => {
+        setDisplayedJobCount(prevCount => prevCount + 9);
+    };
+
+    const filteredCurrentItems = (filteredJobs ?? [])
+        .filter(job => job?.title?.toLowerCase().includes(searchInput.toLowerCase()))
+        .slice(0, displayedJobCount);
+
+    const hasMoreItems = filteredJobs && filteredCurrentItems.length < filteredJobs.filter(job => 
         job?.title?.toLowerCase().includes(searchInput.toLowerCase())
-    );
+    ).length;
 
     const handleViewOpeningsClick = () => {
         if (applyNowRef.current) {
@@ -354,9 +362,15 @@ function CareerSiteDescription() {
                         </Grid>
                     )}
                 </Grid>
-                <Button variant="outlined" sx={{ mt: 4, borderRadius: '20px' }}>
-                    10 MORE
-                </Button>
+                {hasMoreItems && (
+                    <Button 
+                        variant="outlined" 
+                        sx={{ mt: 4, borderRadius: '20px' }}
+                        onClick={handleLoadMore}
+                    >
+                        10 MORE
+                    </Button>
+                )}
             </Box>
             {isViewJobsClicked ? <Footer /> : <DynamicFooter companyInfo={companyInfo} />}
         </div>

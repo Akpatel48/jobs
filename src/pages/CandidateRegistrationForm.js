@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 const CandidateRegistrationForm = () => {
 
 const handleRedirect = () => {
-    window.location.href = "https://staging-cv-app.edjobster.com/"; // Redirect function
+    window.location.href = "https://cvtuner.edjobster.com/"; // Redirect function
 };
 
 return (

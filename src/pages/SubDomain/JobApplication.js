@@ -50,27 +50,27 @@ import BackgroundImageURL from "../../assets/images/BackgroundImageURL.jpeg"
 
 function JobApplication() {
 
-    const steps = (localStorage?.getItem("assesment") !== "null" ) ?
-        ['FillDetails', 'Complete Assesment', 'Preview'] : 
+    const steps = (localStorage?.getItem("assesment") !== "null") ?
+        ['FillDetails', 'Complete Assesment', 'Preview'] :
         ['FillDetails', 'Preview'];
 
 
-    const [userResume,SetUserResume] = useState();
+    const [userResume, SetUserResume] = useState();
     const [resume, setResume] = useState(null);
 
-    
+
     const getStepContent = (step) => {
         switch (step) {
             case 0:
-                return userResume ? <FillDetails userresume={userResume}/> :<FillDetails  resume={resume} setResume={setResume} userresume={userResume}/>;
+                return userResume ? <FillDetails userresume={userResume} /> : <FillDetails resume={resume} setResume={setResume} userresume={userResume} />;
             // case 1:
             //     return <FillWebForm />;
             case 1:
-                return (localStorage?.getItem("assesment") !== "null") ? 
-                    <CompleteAssesment assesmentId={userassesment} /> : 
-                    <Preview userresumes={userResume}/>;
+                return (localStorage?.getItem("assesment") !== "null") ?
+                    <CompleteAssesment assesmentId={userassesment} /> :
+                    <Preview userresumes={userResume} />;
             case 2:
-                return <Preview userresumes={userResume}/>;
+                return <Preview userresumes={userResume} />;
             default:
                 return 'Unknown step';
         }
@@ -87,25 +87,29 @@ function JobApplication() {
     const jobtitle = searchParams.get('jobtitle');
     const jobid = searchParams.get('jobid');
     const user = searchParams.get('user');
-    const userassesment =searchParams.get('assesment')
+    const userassesment = searchParams.get('assesment')
     if (jobid) {
-        localStorage.setItem("assesment",userassesment)
+        localStorage.setItem("assesment", userassesment)
     }
 
-    const [gettingUser,SetGettingUser] = useState(false);
-    
+    const [gettingUser, SetGettingUser] = useState(false);
+
     const jobName = location.state?.job_name || jobtitle;
+    const email = location.state?.companyemail || "";
+    // console.log(location.state);
+
+
     const [activeStep, setActiveStep] = React.useState(0);
     const [skipped, setSkipped] = React.useState(new Set());
-    const webform = useSelector((state) => state.job.job)    
+    const webform = useSelector((state) => state.job.job)
     const assesment = useSelector((state) => state?.assesment?.assesment)
     const candidate_id = localStorage.getItem("candidate_id")
     const { id } = useParams()
-    
-    
+
+
     const { data, isLoading, refetch } = useGetJobeDetailsQuery(id);
-    
-    const job_id =jobid ? jobid : localStorage.getItem("jobId")
+
+    const job_id = jobid ? jobid : localStorage.getItem("jobId")
 
     const [candidate, AddCandidate] = useCandidateApplyMutation()
     const [createCandidate, CreateCandidateInfo] = useAddCandidateMutation()
@@ -119,19 +123,19 @@ function JobApplication() {
 
     useEffect(() => {
         if (jobid) {
-        const listen = onAuthStateChanged(auth, async () => {
-          if (user) {
-            SetGettingUser(true);
-            const userFirebase = await getUserFromDatabase(user);
-            SetUserResume(userFirebase.resumes)
-            // dispatch(updateUser(userFirebase));
-            // initializeSavedResumes(userFirebase);
-          } else {
-            navigate("/");
-          }
-        });
-    }
-      }, []);
+            const listen = onAuthStateChanged(auth, async () => {
+                if (user) {
+                    SetGettingUser(true);
+                    const userFirebase = await getUserFromDatabase(user);
+                    SetUserResume(userFirebase.resumes)
+                    // dispatch(updateUser(userFirebase));
+                    // initializeSavedResumes(userFirebase);
+                } else {
+                    navigate("/");
+                }
+            });
+        }
+    }, []);
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -232,8 +236,8 @@ function JobApplication() {
         // }
 
         return status;
-    };    
-    
+    };
+
     const handleComplete = async () => {
         const arrayWithValues = webform?.webforms?.data?.form.map(section => ({
             name: section.name,
@@ -250,7 +254,7 @@ function JobApplication() {
             'Email': webform?.["Email"],
             'Marital Status': webform?.["Marital Status"],
             'Age': webform?.["Age"],
-            'Date of Birth(yyyy-mm-dd)':dayjs(webform?.["Date of Birth(yyyy-mm-dd)"]).format('YYYY-MM-DD'),
+            'Date of Birth(yyyy-mm-dd)': dayjs(webform?.["Date of Birth(yyyy-mm-dd)"]).format('YYYY-MM-DD'),
             'Street': webform?.["Street"],
             'City': webform?.["City"],
             'State': webform?.["State"],
@@ -301,8 +305,8 @@ function JobApplication() {
             // notice_period: specificFields["Notice Period"],
             // job_role: specificFields["Job Role"],
             ...extraFields,
-            source:"career site",
-            addional_fields: [{arrayWithValues}],
+            source: "career site",
+            addional_fields: [{ arrayWithValues }],
             assessment_data: [assesment]
         };
 
@@ -343,19 +347,19 @@ function JobApplication() {
         formData.append('pipeline_stage', "Associated_Screening");
         formData.append('summary', webform.summary);
         formData.append("resume_data", webform.resume_data ? webform.resume_data : JSON.stringify({}));
-        formData.append("resume_user",user)
+        formData.append("resume_user", user)
 
         // Append files
         if (webform?.cover_letter instanceof File) {
-          formData.append('cover_letter', webform.cover_letter);
+            formData.append('cover_letter', webform.cover_letter);
         }
         if (webform?.certificate instanceof File) {
-          formData.append('certificate', webform.certificate);
+            formData.append('certificate', webform.certificate);
         }
         if (webform?.professional_certificate instanceof File) {
-          formData.append('professional_certificate', webform.professional_certificate);
+            formData.append('professional_certificate', webform.professional_certificate);
         }
-        
+
         if (resume) {
             formData.append('resume', resume);
         }
@@ -369,18 +373,18 @@ function JobApplication() {
 
         if (webform.skills && webform.skills.length > 0) {
             webform.skills.forEach(skillId => {
-              formData.append('skills', skillId);
+                formData.append('skills', skillId);
             });
-          }
-          if (webform.subjects && webform.subjects.length > 0) {
+        }
+        if (webform.subjects && webform.subjects.length > 0) {
             webform.subjects.forEach(subject => {
-              if (subject && subject.value) {
-                formData.append('subjects', subject.value);
-              }
+                if (subject && subject.value) {
+                    formData.append('subjects', subject.value);
+                }
             });
-          }
-        
-        const res = await createCandidate(formData) 
+        }
+
+        const res = await createCandidate(formData)
 
         dispatch(clearJobData());
     };
@@ -394,19 +398,19 @@ function JobApplication() {
 
     useEffect(() => {
         if (CreateCandidateInfo.isError) {
-          toast.error('Error adding candidate, please fill all the details');
-        //   showToast('error', 'Error adding candidate, please fill all the details');
+            toast.error('Error adding candidate, please fill all the details');
+            //   showToast('error', 'Error adding candidate, please fill all the details');
         }
         if (CreateCandidateInfo.isSuccess) {
-          toast.success('Successfully added candidates');
-        //   showToast('success', 'Successfully added candidate');
-        const timeoutId = setTimeout(() => {
-            navigate(-1);
-          }, 2000);
-          return () => clearTimeout(timeoutId);
-        
+            toast.success('Successfully added candidates');
+            //   showToast('success', 'Successfully added candidate');
+            const timeoutId = setTimeout(() => {
+                navigate(-1);
+            }, 2000);
+            return () => clearTimeout(timeoutId);
+
         }
-      }, [CreateCandidateInfo, navigate]);
+    }, [CreateCandidateInfo, navigate]);
 
     const handleBack = () => {
         // dispatch(clearJobData()); // Dispatch the action to clear the Redux state
@@ -439,10 +443,10 @@ function JobApplication() {
                     {jobName}
                 </Typography>
             </Stack> */}
-            <IconButton 
+            <IconButton
                 onClick={handleBackPage}
-                sx={{ 
-                    position: 'absolute', 
+                sx={{
+                    position: 'absolute',
                     top: 16, // Adjusted for better visibility
                     left: 16, // Adjusted for better visibility
                     zIndex: 3, // Ensure it appears above other elements
@@ -451,35 +455,35 @@ function JobApplication() {
             >
                 <ArrowBackIcon fontSize="large" />
             </IconButton>
-                <Box
-                    sx={{
-                        backgroundImage: `url(${BackgroundImageURL})`, // Use dynamic image
-                        backgroundSize: '110%', // Zoom effect
-                        backgroundPosition: 'center',
-                        color: '#fff',
-                        textAlign: 'center',
-                        py: 5,
+            <Box
+                sx={{
+                    backgroundImage: `url(${BackgroundImageURL})`, // Use dynamic image
+                    backgroundSize: '110%', // Zoom effect
+                    backgroundPosition: 'center',
+                    color: '#fff',
+                    textAlign: 'center',
+                    py: 5,
+                    position: 'relative',
+                    '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                        zIndex: 1,
+                    },
+                    '& > *': {
                         position: 'relative',
-                        '&::before': {
-                            content: '""',
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                            zIndex: 1,
-                        },
-                        '& > *': {
-                            position: 'relative',
-                            zIndex: 2,
-                        }
-                    }}
-                >
-                    <Typography variant="h3">
-                        {jobName}
-                    </Typography>
-                </Box>
+                        zIndex: 2,
+                    }
+                }}
+            >
+                <Typography variant="h3">
+                    {jobName}
+                </Typography>
+            </Box>
             <Card style={{ marginTop: "2%", marginBottom: "2%" }}>
                 <div style={{ width: "60%", marginLeft: "auto", marginRight: "auto", marginTop: "2%" }}>
                     <Stepper activeStep={activeStep} sx={{ fontSize: "xx-large" }}>
@@ -511,7 +515,7 @@ function JobApplication() {
                                 {getStepContent(activeStep)}
                             </div>
                             <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: '5%', marginBottom: '20px', justifyContent: 'space-evenly' }}>
-                                <div style={{ display: "flex", alignItems: "center"}}>
+                                <div style={{ display: "flex", alignItems: "center" }}>
                                     <Button disabled={activeStep === 0} onClick={handleBack} style={{ marginRight: '30px' }}>
                                         Back
                                     </Button>
@@ -523,9 +527,9 @@ function JobApplication() {
                                     </Button> */}
                                     {activeStep === steps.length - 1 ? (
                                         <>
-                                        <Button variant="contained" color="primary" onClick={handleComplete} style={{ marginRight: '0px' }}>
-                                            Finish
-                                        </Button>
+                                            <Button variant="contained" color="primary" onClick={handleComplete} style={{ marginRight: '0px' }}>
+                                                Finish
+                                            </Button>
                                         </>
                                     ) : (
                                         <Button variant="contained" color="primary" onClick={handleNext} style={{ marginRight: '0px' }}>
@@ -534,6 +538,18 @@ function JobApplication() {
                                     )}
                                 </div>
                             </Box>
+                            {!jobid ?
+                                <Typography sx={{
+                                    textAlign: 'center',
+                                    mt: 2,
+                                    mb: 3,
+                                    color: '#666',
+                                    px: 2
+                                }}>
+                                    If you have any queries about the job or are unable to apply, please send your CV to <a href={`mailto:${email}`}>{email}</a>
+                                </Typography> : ""
+                            }
+
                             <Snackbar open={open} autoHideDuration={2000} onClose={handleClose} sx={{ height: "10vh" }}
                                 anchorOrigin={{
                                     vertical: "top",
@@ -556,13 +572,13 @@ function JobApplication() {
                 justifyContent="center"
                 alignItems="center"
                 flexDirection={isMobile ? "column" : "row"}
-                >
+            >
                 <Typography variant="body2" color="textSecondary" align="center">
-                Powered by 
+                    Powered by
                 </Typography>
                 <img src={edjobster09} alt="Powered by Edjobster" style={{ marginLeft: "8px", height: "35px" }} />
-                </Box>
-            <ToastContainer/>
+            </Box>
+            <ToastContainer />
         </div>
     )
 }

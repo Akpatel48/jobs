@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Box, Container, Grid, Typography, IconButton, useTheme, useMediaQuery } from "@mui/material";
+import { Box, Container, Grid, Typography, IconButton, useTheme, useMediaQuery, Link } from "@mui/material";
 import { styled } from "@mui/system";
 import { Email as EmailIcon, Phone as PhoneIcon, LocationOn as LocationOnIcon, Facebook, Twitter, Instagram, LinkedIn, ArrowUpward } from "@mui/icons-material";
-
+import edjobster09 from "../assets/images/edjobster-09.png"
 const StyledFooter = styled("footer")(({ theme }) => ({
   backgroundColor: "#ffffff",
   padding: "48px 0 24px",
@@ -41,7 +41,7 @@ const BackToTop = styled(IconButton)(({ theme }) => ({
   },
 }));
 
-const DynamicFooter = ({companyInfo}) => {
+const DynamicFooter = ({ companyInfo }) => {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -58,10 +58,10 @@ const DynamicFooter = ({companyInfo}) => {
   };
 
   const navigationLinks = [
-    "Home ",
-    "Jobs ",
-    "Registration ",
-    "About Us ",
+    // { name: "Home", url: "/" },
+    // { name: "Jobs", url: "/jobs" },
+    { name: "Registration", url: "https://cvtuner.edjobster.com/" },
+    { name: "About Us", url: "https://edjobster.com/edjobster-hiring/" },
   ];
 
   return (
@@ -72,16 +72,17 @@ const DynamicFooter = ({companyInfo}) => {
             <Typography variant="h6" fontWeight="bold" gutterBottom>
               Navigation
             </Typography>
-            {navigationLinks.map((link) => (
-              <Box key={link} sx={{ display: 'block', mb: 1 }}>
-                <FooterLink
-                  variant="body2"
-                  component="a"
-                  role="link"
-                  aria-label={`Navigate to ${link}`}
-                >
-                  {link}
-                </FooterLink>
+            {navigationLinks.map(({ name, url }) => (
+                <Box key={name} sx={{ display: 'block', mb: 1 }}>
+                  <FooterLink
+                    variant="body2"
+                    component="a"
+                    href={url} 
+                    role="link"
+                    aria-label={`Navigate to ${name}`}
+                  >
+                    {name}
+                  </FooterLink>
               </Box>
             ))}
           </Grid>
@@ -92,7 +93,7 @@ const DynamicFooter = ({companyInfo}) => {
             </Typography>
             <Box display="flex" alignItems="center" mb={1}>
               <LocationOnIcon style={{ marginRight: "8px" }} />
-              <Typography variant="body2">{companyInfo.address } {companyInfo.city_name}, {companyInfo.state_name}, {companyInfo.country_name}</Typography>
+              <Typography variant="body2">{companyInfo.address} {companyInfo.city_name}, {companyInfo.state_name}, {companyInfo.country_name}</Typography>
             </Box>
             <Box display="flex" alignItems="center" mb={1}>
               <PhoneIcon style={{ marginRight: "8px" }} />
@@ -155,9 +156,21 @@ const DynamicFooter = ({companyInfo}) => {
           alignItems="center"
           flexDirection={isMobile ? "column" : "row"}
         >
-          <Typography variant="body2" color="textSecondary" align="center">
-            Powered by Edjobster
-          </Typography>
+          <Link 
+            href="https://edjobster.com/edjobster-hiring/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            sx={{ 
+              display: 'flex', 
+              alignItems: 'center',
+              textDecoration: 'none'
+            }}
+          >
+            <Typography variant="body2" color="textSecondary" align="center">
+              Powered by
+            </Typography>
+            <img src={edjobster09} alt="Powered by Edjobster" style={{ marginLeft: "8px", height: "35px" }} />
+          </Link>
         </Box>
 
         <BackToTop onClick={scrollToTop} aria-label="Back to top">
